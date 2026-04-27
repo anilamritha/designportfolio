@@ -1,0 +1,2916 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Amritha. Bilingual by birth. Inclusive by design.</title>
+<meta name="description" content="Portfolio of Amritha, a South Asian Australian designer based in Brisbane, working across print, UX, web and interactive design." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Fauna+One&family=Caveat:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<style>
+:root{
+  --c-ink:    #340B01;
+  --c-bark:   #6B4028;
+  --c-sage:   #7B967A;
+  --c-mint:   #BED4C2;
+  --c-cream:  #F6F4F3;
+  --c-paper:  #EFE6DA;
+  --c-peach:  #E8B07A;
+  --c-rose:   #D4A09E;
+  --c-butter: #F0D9B8;
+
+  --c-glass: rgba(246,244,243,0.55);
+  --c-glass-stroke: rgba(52,11,1,0.10);
+
+  --font-display: 'Cinzel', 'Cormorant Garamond', serif;
+  --font-body:    'Fauna One', Georgia, serif;
+  --font-hand:    'Caveat', cursive;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+  --r: 8px;
+  --r-lg: 14px;
+
+  --shadow-soft: 0 1px 2px rgba(52,11,1,.05), 0 8px 24px -8px rgba(52,11,1,.10), 0 24px 60px -20px rgba(52,11,1,.14);
+  --shadow-pop:  0 2px 6px rgba(52,11,1,.08), 0 16px 40px -12px rgba(52,11,1,.20);
+  --shadow-window: 0 2px 6px rgba(52,11,1,.06), 0 24px 48px -12px rgba(52,11,1,.18), 0 60px 120px -40px rgba(52,11,1,.22);
+
+  --ease-soft: cubic-bezier(.22,.61,.36,1);
+  --ease-pop:  cubic-bezier(.34,1.56,.64,1);
+}
+
+*{ box-sizing: border-box; }
+html, body{
+  margin: 0; padding: 0;
+  background: var(--c-cream);
+  color: var(--c-ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.005em;
+  overflow-x: hidden;
+}
+body{ cursor: none; -webkit-font-smoothing: antialiased; }
+@media (hover: none){ body{ cursor: auto; } }
+
+a{ color: inherit; text-decoration: none; }
+button{ font: inherit; color: inherit; background: none; border: 0; cursor: none; padding: 0; }
+@media (hover: none){ button, a{ cursor: pointer; } }
+
+img{ max-width: 100%; display: block; }
+::selection{ background: rgba(123,150,122,.35); color: var(--c-ink); }
+
+/* ============ Background layers ============ */
+#bg-canvas{
+  position: fixed; inset: 0;
+  width: 100vw; height: 100vh;
+  z-index: -4; pointer-events: none;
+}
+.bg-noise{
+  position: fixed; inset: 0; z-index: -3; pointer-events: none;
+  opacity: .35; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.05 0 0 0 0 0.005 0 0 0 0.16 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+  background-size: 220px;
+}
+.bg-stars{
+  position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  overflow: hidden;
+}
+.bg-stars span{
+  position: absolute; border-radius: 50%; background: var(--c-bark);
+  opacity: .25;
+  animation: twinkle var(--dur, 4s) ease-in-out var(--delay, 0s) infinite;
+}
+@keyframes twinkle{
+  0%, 100%{ opacity: .08; transform: scale(.85); }
+  50%{ opacity: .55; transform: scale(1.1); }
+}
+.droplets{
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+}
+.droplet{
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(36px);
+  mix-blend-mode: multiply;
+  opacity: .45;
+  will-change: transform;
+}
+
+/* ============ Custom cursor ============ */
+.cursor-dot, .cursor-ring{
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+}
+.cursor-dot{
+  width: 6px; height: 6px;
+  background: var(--c-cream);
+  border-radius: 50%;
+}
+.cursor-ring{
+  width: 36px; height: 36px;
+  border: 1px solid var(--c-cream);
+  border-radius: 50%;
+  transition: width .25s var(--ease-soft), height .25s var(--ease-soft);
+}
+.cursor-ring .label{
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  font-family: var(--font-mono);
+  font-size: 9px; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--c-cream);
+  opacity: 0; transition: opacity .2s;
+}
+body.is-hover .cursor-ring{ width: 76px; height: 76px; }
+body.is-hover .cursor-ring .label{ opacity: 1; }
+body.is-press .cursor-ring{ width: 24px; height: 24px; }
+body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
+@media (hover: none){ .cursor-dot, .cursor-ring{ display: none; } }
+
+/* ============ Layout ============ */
+.wrap{ width: min(1320px, 92vw); margin-inline: auto; }
+
+/* ============ Menubar ============ */
+.menubar{
+  position: fixed; top: 14px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; align-items: center; gap: 18px;
+  padding: 8px 14px;
+  background: var(--c-glass);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  border: 1px solid var(--c-glass-stroke);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-soft);
+  font-size: 13px;
+  z-index: 200;
+  font-family: var(--font-body);
+}
+.menubar .brand{
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.menubar .live-dot{
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--c-sage);
+  position: relative;
+}
+.menubar .live-dot::after{
+  content:''; position:absolute; inset:-4px;
+  border: 1px solid var(--c-sage);
+  border-radius: 50%;
+  animation: ringpulse 2.4s ease-out infinite;
+}
+@keyframes ringpulse{
+  0%{ transform: scale(.5); opacity: 1; }
+  100%{ transform: scale(2); opacity: 0; }
+}
+.menubar .ln{ width: 1px; height: 14px; background: var(--c-glass-stroke); }
+.menubar .nav-links{ display: flex; gap: 14px; }
+.menubar .nav-links a{ position: relative; }
+.menubar .nav-links a::after{
+  content:''; position: absolute; left: 0; right: 0; bottom: -3px;
+  height: 1px; background: currentColor;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .35s var(--ease-soft);
+}
+.menubar .nav-links a:hover::after{ transform: scaleX(1); }
+.menubar .meta{
+  margin-left: auto; display: flex; gap: 14px;
+  opacity: .7; font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono); font-size: 11px;
+}
+@media (max-width: 760px){
+  .menubar .nav-links, .menubar .meta{ display: none; }
+}
+
+/* ============ HERO: organised chaos ============ */
+#hero{
+  position: relative;
+  min-height: 100vh;
+  padding: 140px 0 80px;
+  overflow: hidden;
+}
+.hero-stage{
+  position: relative;
+  width: min(1280px, 96vw);
+  margin-inline: auto;
+  min-height: 720px;
+}
+
+/* Title stack center */
+.hero-titlewrap{
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  pointer-events: none;
+  padding: 80px 0 40px;
+}
+.hero-eyebrow{
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: .26em; text-transform: uppercase;
+  color: var(--c-bark);
+  margin-bottom: 24px;
+  pointer-events: auto;
+}
+.hero-title{
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(44px, 8.4vw, 138px);
+  line-height: .92;
+  letter-spacing: -0.005em;
+  margin: 0;
+  pointer-events: none;
+}
+.hero-title .row{
+  display: inline-flex; align-items: baseline; gap: .15em;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+.hero-title .word{ display: inline-block; overflow: hidden; }
+.hero-title .word > span{ display: inline-block; transform: translateY(110%); }
+.hero-title .ital{ font-style: italic; color: var(--c-bark); }
+.hero-title .accent{
+  display: inline-flex;
+  vertical-align: middle;
+  margin: 0 .12em;
+  height: .68em;
+  pointer-events: auto;
+}
+.hero-title .accent svg{ height: 100%; width: auto; }
+
+.hero-subline{
+  margin-top: 26px;
+  display: inline-flex; align-items: center; gap: 18px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--c-bark);
+  pointer-events: auto;
+}
+.hero-subline .swatch{
+  display: inline-flex; gap: 5px;
+}
+.hero-subline .swatch i{
+  width: 12px; height: 12px; border-radius: 50%;
+  display: inline-block;
+  border: 1px solid var(--c-glass-stroke);
+}
+
+/* Floating decorative star polygons */
+.starshape{
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  opacity: .55;
+  will-change: transform;
+}
+.starshape svg{ width: 100%; height: 100%; }
+
+/* === Hero stickers (the scattered objects) === */
+.sticker{
+  position: absolute;
+  z-index: 4;
+  cursor: grab;
+  user-select: none;
+  will-change: transform;
+}
+.sticker:active{ cursor: grabbing; }
+.sticker .nudge{
+  position: absolute; left: 50%; bottom: -24px;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--c-bark);
+  white-space: nowrap;
+  opacity: 0; transition: opacity .3s var(--ease-soft);
+  pointer-events: none;
+}
+.sticker:hover .nudge{ opacity: .85; }
+
+/* --- Lanyard ID Badge --- */
+.lanyard{
+  width: 220px;
+  display: flex; flex-direction: column; align-items: center;
+  filter: drop-shadow(0 24px 32px rgba(52,11,1,.18));
+}
+.lanyard .strap{
+  width: 22px; height: 56px;
+  background: linear-gradient(180deg, #6b4028, #4a2c1a);
+  position: relative;
+}
+.lanyard .strap::before{
+  content:''; position:absolute; inset:0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(255,255,255,.08) 4px, rgba(255,255,255,.08) 5px);
+}
+.lanyard .strap::after{
+  content:''; position: absolute; left: 50%; bottom: 0;
+  transform: translate(-50%, 50%);
+  width: 28px; height: 12px; border-radius: 4px;
+  background: #2a1812;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.4);
+}
+.badge-card{
+  width: 196px;
+  background: var(--c-cream);
+  border-radius: 10px;
+  padding: 6px;
+  margin-top: -4px;
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(52,11,1,.15), 0 8px 20px rgba(52,11,1,.12);
+}
+.badge-inner{
+  background: var(--c-ink);
+  border-radius: 6px;
+  padding: 22px 14px 18px;
+  position: relative;
+  overflow: hidden;
+  color: var(--c-cream);
+}
+.badge-inner::before{
+  content:''; position:absolute; inset:0;
+  background-image: radial-gradient(circle, rgba(255,255,255,.12) 1px, transparent 1px);
+  background-size: 14px 14px;
+  opacity: .5;
+}
+.badge-tamil{
+  font-family: var(--font-display);
+  font-size: 28px; line-height: 1;
+  letter-spacing: .04em;
+  font-weight: 600;
+  margin-bottom: 6px;
+  position: relative;
+}
+.badge-role{
+  font-family: var(--font-mono);
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(246,244,243,.55);
+  margin-bottom: 14px;
+  position: relative;
+}
+.badge-photo{
+  width: 96px; height: 96px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: var(--c-bark);
+  overflow: hidden;
+  display: grid; place-items: center;
+  border: 3px solid var(--c-bark);
+  position: relative;
+}
+.badge-photo svg{ width: 64px; height: 64px; opacity: .9; }
+.badge-name{
+  margin-top: 12px;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  position: relative;
+}
+.badge-loc{
+  font-family: var(--font-mono);
+  font-size: 9px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--c-sage);
+  margin-top: 4px;
+  position: relative;
+}
+
+/* --- Boarding pass / ticket --- */
+.ticket{
+  width: 280px;
+  background: var(--c-cream);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-pop);
+  overflow: hidden;
+  display: flex;
+  font-family: var(--font-mono);
+  position: relative;
+}
+.ticket::before, .ticket::after{
+  content:''; position: absolute;
+  width: 14px; height: 14px;
+  background: var(--c-cream);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  box-shadow: inset 0 0 0 1px var(--c-glass-stroke);
+}
+.ticket::before{ left: -7px; }
+.ticket::after{ right: -7px; }
+.ticket-main{
+  flex: 1;
+  padding: 14px 16px;
+  border-right: 1px dashed var(--c-glass-stroke);
+}
+.ticket-tag{
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--c-bark);
+  margin-bottom: 10px;
+}
+.ticket-route{
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.ticket-route .arrow{
+  display: inline-block;
+  margin: 0 .25em;
+  color: var(--c-sage);
+}
+.ticket-row{
+  display: flex; gap: 18px;
+  font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
+  margin-top: 10px;
+  color: var(--c-bark);
+}
+.ticket-row strong{
+  display: block;
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--c-ink);
+  font-weight: 500;
+  margin-top: 3px;
+}
+.ticket-stub{
+  width: 60px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--c-ink);
+  color: var(--c-cream);
+  font-family: var(--font-mono);
+  font-size: 9px; letter-spacing: .2em;
+  writing-mode: vertical-rl;
+  text-transform: uppercase;
+  padding: 12px 0;
+}
+.ticket-stub .num{
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: .1em;
+  writing-mode: horizontal-tb;
+  margin-bottom: 8px;
+  color: var(--c-mint);
+}
+
+/* --- Vinyl + sleeve --- */
+.vinyl-card{
+  width: 200px;
+  position: relative;
+}
+.vinyl-disc{
+  position: absolute;
+  width: 170px; height: 170px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, var(--c-ink) 0%, var(--c-ink) 18%, var(--c-bark) 19%, var(--c-bark) 22%, #1a0a05 23%, #1a0a05 100%);
+  top: 14px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 0;
+  box-shadow: 0 6px 18px rgba(0,0,0,.3);
+  animation: vinylspin 12s linear infinite;
+}
+.vinyl-disc::before{
+  content:''; position: absolute; inset: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.05);
+}
+.vinyl-disc::after{
+  content:''; position: absolute;
+  width: 30px; height: 30px;
+  background: var(--c-peach);
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,.2);
+}
+@keyframes vinylspin{
+  to{ transform: translate(-50%, 0) rotate(360deg); }
+}
+.vinyl-sleeve{
+  position: relative;
+  background: var(--c-cream);
+  border-radius: var(--r);
+  padding: 18px 16px 16px;
+  box-shadow: var(--shadow-pop);
+  z-index: 2;
+  margin-top: 60px;
+}
+.vinyl-sleeve .pad{
+  width: 100%; aspect-ratio: 1;
+  border-radius: var(--r);
+  background: linear-gradient(135deg, var(--c-mint), var(--c-sage));
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.vinyl-sleeve .pad svg{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.vinyl-sleeve .label{
+  font-family: var(--font-mono);
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--c-bark);
+}
+.vinyl-sleeve h4{
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: .04em;
+  margin: 4px 0 2px;
+}
+.vinyl-sleeve p{
+  margin: 0;
+  font-size: 12px; color: var(--c-bark);
+}
+
+/* --- Mac folder with project icons --- */
+.mac-folder{
+  position: relative;
+  width: 200px; height: 170px;
+  filter: drop-shadow(0 16px 26px rgba(52,11,1,.20));
+  perspective: 700px;
+}
+.mac-folder .back{ position: absolute; inset: 0; z-index: 0; }
+.mac-folder .front{
+  position: absolute; inset: 0; z-index: 3;
+  transform-origin: bottom center;
+  transition: transform .55s var(--ease-soft);
+}
+.mac-folder:hover .front{ transform: rotateX(-26deg); }
+.mac-folder .item{
+  position: absolute;
+  bottom: 22%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 2;
+  opacity: 0;
+  transition: opacity .5s var(--ease-soft), transform .55s var(--ease-pop);
+  filter: drop-shadow(0 8px 14px rgba(0,0,0,.25));
+}
+.mac-folder:hover .item{ opacity: 1; }
+.mac-folder:hover .item.i1{ transform: translate(-160%, -85%) rotate(-14deg); }
+.mac-folder:hover .item.i2{ transform: translate(-50%, -110%) rotate(2deg); }
+.mac-folder:hover .item.i3{ transform: translate(60%, -90%) rotate(12deg); }
+
+/* --- Ripped paper note with doodles --- */
+.rippedpaper{
+  width: 360px;
+  position: relative;
+  filter: drop-shadow(0 12px 22px rgba(52,11,1,.16));
+}
+.rippedpaper .paper{
+  background: var(--c-paper);
+  padding: 28px 30px 32px;
+  position: relative;
+  font-family: var(--font-hand);
+  font-size: 22px;
+  color: var(--c-bark);
+  line-height: 1.3;
+  text-align: center;
+  clip-path: polygon(
+    0% 5%, 4% 0%, 12% 4%, 22% 1%, 32% 5%, 42% 0%, 52% 4%, 62% 1%, 72% 5%, 82% 1%, 92% 5%, 100% 2%,
+    100% 95%, 95% 100%, 88% 96%, 78% 100%, 68% 96%, 58% 100%, 48% 96%, 38% 100%, 28% 96%, 18% 100%, 8% 96%, 0% 100%
+  );
+}
+.rippedpaper .paper::before{
+  content:''; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><filter id='n'><feTurbulence baseFrequency='0.7' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.25 0 0 0 0 0.16 0 0 0 0.10 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+  background-size: 200px;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: .35;
+}
+.rippedpaper .tape{
+  position: absolute;
+  width: 80px; height: 22px;
+  background: rgba(232,176,122,.55);
+  top: -8px; left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  z-index: 2;
+  box-shadow: 0 2px 4px rgba(0,0,0,.06);
+}
+.doodle-chai, .doodle-plant, .doodle-pencil{
+  position: absolute;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,.1));
+}
+.doodle-chai{
+  width: 64px; height: 80px;
+  bottom: -22px; left: -22px;
+  transform: rotate(-8deg);
+}
+.doodle-plant{
+  width: 88px; height: 110px;
+  top: -18px; right: -34px;
+  transform: rotate(8deg);
+}
+.doodle-pencil{
+  width: 96px; height: 24px;
+  bottom: -10px; right: -30px;
+  transform: rotate(18deg);
+}
+
+/* --- Photo collage --- */
+.collage{
+  width: 280px;
+  position: relative;
+  height: 220px;
+}
+.polaroid{
+  position: absolute;
+  background: var(--c-cream);
+  padding: 8px 8px 28px;
+  box-shadow: var(--shadow-pop);
+  transition: transform .4s var(--ease-soft), box-shadow .4s;
+}
+.polaroid:hover{
+  transform: rotate(0deg) translateY(-6px) scale(1.05) !important;
+  z-index: 5;
+  box-shadow: 0 4px 12px rgba(52,11,1,.10), 0 30px 60px -10px rgba(52,11,1,.30);
+}
+.polaroid .pic{
+  width: 130px; aspect-ratio: 1;
+  position: relative;
+  overflow: hidden;
+}
+.polaroid .cap{
+  position: absolute;
+  bottom: 6px; left: 0; right: 0;
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: 13px;
+  color: var(--c-bark);
+}
+.polaroid.p1{ left: 0; top: 0; transform: rotate(-6deg); z-index: 3; }
+.polaroid.p2{ right: 0; top: 8px; transform: rotate(7deg); z-index: 2; }
+.polaroid.p3{ left: 58px; top: 70px; transform: rotate(-2deg); z-index: 4; }
+.collage .peeker{
+  position: absolute;
+  width: 80px; height: 80px;
+  right: -8px; top: -22px;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(20px) rotate(20deg);
+  transition: opacity .5s var(--ease-pop), transform .55s var(--ease-pop);
+}
+.collage:hover .peeker{
+  opacity: 1; transform: translateY(0) rotate(0deg);
+}
+
+/* --- Terminal --- */
+.terminal{
+  width: 320px;
+  background: #fafaf6;
+  border-radius: var(--r);
+  border: 1px solid var(--c-glass-stroke);
+  box-shadow: var(--shadow-pop);
+  overflow: hidden;
+}
+.terminal-bar{
+  padding: 10px 12px;
+  display: flex; align-items: center;
+  background: linear-gradient(180deg, #faf8f4, #efece4);
+  border-bottom: 1px solid var(--c-glass-stroke);
+}
+.terminal-bar .dots{ display: flex; gap: 6px; }
+.terminal-bar .dots i{
+  width: 11px; height: 11px; border-radius: 50%;
+  display: inline-block;
+}
+.terminal-bar .dots i:nth-child(1){ background: #ff5f57; }
+.terminal-bar .dots i:nth-child(2){ background: #febc2e; }
+.terminal-bar .dots i:nth-child(3){ background: #28c840; }
+.terminal-bar .title{
+  flex: 1; text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--c-bark);
+}
+.terminal-body{
+  padding: 14px 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--c-ink);
+}
+.terminal-body .pr{ color: var(--c-sage); }
+.terminal-body .out{ color: var(--c-bark); display: block; }
+.terminal-body .blink::after{
+  content: '▍'; color: var(--c-ink);
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink{ 50%{ opacity: 0; } }
+
+/* --- Stamp --- */
+.stamp{
+  width: 130px; height: 150px;
+  background: var(--c-cream);
+  border: 2px dashed var(--c-bark);
+  padding: 12px;
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--c-ink);
+  text-align: center;
+  filter: drop-shadow(0 8px 14px rgba(52,11,1,.16));
+}
+.stamp::before, .stamp::after{
+  content:''; position: absolute;
+  background: radial-gradient(circle, var(--c-cream) 0%, var(--c-cream) 60%, transparent 60%);
+  background-size: 12px 12px;
+  pointer-events: none;
+}
+.stamp .body{
+  background: var(--c-mint);
+  height: 100%;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  position: relative;
+}
+.stamp .body::after{
+  content:''; position: absolute;
+  width: 50px; height: 50px;
+  border: 1px solid var(--c-ink);
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  opacity: .3;
+}
+.stamp .top{
+  font-size: 8px; letter-spacing: .2em; text-transform: uppercase;
+}
+.stamp .num{
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--c-ink);
+}
+.stamp .bot{
+  font-size: 8px; letter-spacing: .2em; text-transform: uppercase;
+}
+
+/* --- Position presets --- */
+.s-lanyard{ top: 30px;  left: 40px; }
+.s-ticket { top: 0;     right: 50px; transform: rotate(5deg); }
+.s-vinyl  { top: 320px; left: 20px;  transform: rotate(-6deg); }
+.s-folder { bottom: 20px; left: 22%; transform: rotate(-4deg); }
+.s-paper  { top: 38%;  left: 50%;  transform: translateX(-50%) rotate(-2deg); display: none; }
+.s-collage{ top: 290px; right: 40px; transform: rotate(4deg); }
+.s-terminal{ bottom: 30px; right: 40px; transform: rotate(-2deg); }
+.s-stamp  { bottom: 230px; right: 30%; transform: rotate(11deg); }
+
+@media (max-width: 980px){
+  .hero-stage{ min-height: 1100px; }
+  .s-lanyard{ top: 600px; left: 20px; }
+  .s-ticket { top: 540px; right: 10px; }
+  .s-vinyl  { top: 800px; left: 30px; }
+  .s-folder { top: 850px; left: auto; right: 30px; bottom: auto; }
+  .s-collage{ top: 1100px; left: 50%; transform: translateX(-50%) rotate(2deg); }
+  .s-terminal{ display: none; }
+  .s-stamp  { display: none; }
+}
+
+/* ============ Marquee strip ============ */
+.marquee{
+  position: relative;
+  margin: 60px 0 0;
+  padding: 22px 0;
+  border-top: 1px solid var(--c-glass-stroke);
+  border-bottom: 1px solid var(--c-glass-stroke);
+  overflow: hidden;
+  background: rgba(190, 212, 194, .22);
+  backdrop-filter: blur(8px);
+}
+.marquee-track{
+  display: inline-flex; align-items: center; gap: 50px;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(28px, 4.6vw, 60px);
+  color: var(--c-bark);
+  font-weight: 400;
+  will-change: transform;
+}
+.marquee-track .star{ color: var(--c-sage); }
+
+/* ============ Intro ============ */
+#intro{
+  padding: 140px 0 100px;
+  position: relative;
+}
+.intro-grid{
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 80px;
+  align-items: start;
+}
+.intro-label{
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--c-bark);
+}
+.intro-headline{
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.2vw, 50px);
+  line-height: 1.2;
+  font-weight: 400;
+  margin: 18px 0 0;
+  letter-spacing: -0.005em;
+}
+.intro-headline em{ color: var(--c-bark); font-style: italic; }
+.intro-body{
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--c-ink);
+  max-width: 56ch;
+}
+.intro-body p + p{ margin-top: 1.1em; }
+.tag-row{
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-top: 28px;
+}
+.tag{
+  padding: 7px 13px;
+  border: 1px solid var(--c-glass-stroke);
+  border-radius: var(--r);
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  background: rgba(246,244,243,.6);
+  backdrop-filter: blur(8px);
+}
+@media (max-width: 880px){
+  .intro-grid{ grid-template-columns: 1fr; gap: 30px; }
+}
+
+/* ============ Projects: Mac Finder ============ */
+#desktop{
+  position: relative;
+  padding: 60px 0 120px;
+}
+.desk-header{
+  display: flex; align-items: end; justify-content: space-between;
+  gap: 40px; flex-wrap: wrap;
+  margin-bottom: 56px;
+}
+.desk-title{
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 96px);
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+.desk-title em{ font-style: italic; color: var(--c-bark); }
+.desk-sub{
+  max-width: 380px; font-size: 15px; color: var(--c-bark);
+}
+
+/* The Finder window */
+.finder{
+  background: rgba(246,244,243,.85);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  border: 1px solid var(--c-glass-stroke);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-window);
+  position: relative;
+}
+.finder-bar{
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 18px;
+  background: linear-gradient(180deg, #f6f1e9, #ece5d6);
+  border-bottom: 1px solid var(--c-glass-stroke);
+}
+.finder-dots{ display: flex; gap: 6px; }
+.finder-dots i{ width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.finder-dots i:nth-child(1){ background: #ff5f57; }
+.finder-dots i:nth-child(2){ background: #febc2e; }
+.finder-dots i:nth-child(3){ background: #28c840; }
+.finder-path{
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--c-bark);
+}
+.finder-tools{
+  display: flex; gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--c-bark);
+}
+.finder-body{
+  display: grid;
+  grid-template-columns: 200px 1fr;
+}
+@media (max-width: 760px){
+  .finder-body{ grid-template-columns: 1fr; }
+  .finder-side{ display: none; }
+}
+.finder-side{
+  border-right: 1px solid var(--c-glass-stroke);
+  padding: 18px 14px;
+  background: rgba(239,230,218,.4);
+}
+.finder-side .group{
+  font-family: var(--font-mono);
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--c-bark);
+  padding: 4px 8px 8px;
+}
+.finder-side .item{
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--c-ink);
+  cursor: none;
+  transition: background .25s;
+}
+.finder-side .item:hover{ background: rgba(52,11,1,.05); }
+.finder-side .item.is-active{ background: rgba(52,11,1,.10); font-weight: 500; }
+.finder-side .item .ic{
+  width: 14px; height: 14px;
+  display: inline-grid; place-items: center;
+}
+
+.finder-main{
+  padding: 34px 36px 40px;
+  position: relative;
+  min-height: 540px;
+}
+.folders-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+@media (max-width: 980px){ .folders-grid{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px){ .folders-grid{ grid-template-columns: 1fr; } }
+
+.folder-tile{
+  position: relative;
+  cursor: none;
+  transition: transform .35s var(--ease-pop);
+}
+.folder-tile:hover{ transform: translateY(-6px); }
+
+.folder-icon{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.18 / 1;
+  perspective: 800px;
+  filter: drop-shadow(0 12px 22px rgba(52,11,1,.18));
+}
+.folder-back, .folder-front, .folder-thing{
+  position: absolute; inset: 0;
+}
+.folder-back svg, .folder-front svg{ width: 100%; height: 100%; }
+.folder-front{
+  transform-origin: bottom center;
+  transition: transform .55s var(--ease-soft);
+  z-index: 3;
+}
+.folder-tile:hover .folder-front{ transform: rotateX(-22deg); }
+.folder-thing{
+  z-index: 2;
+  display: grid; place-items: end center;
+  padding-bottom: 28%;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .5s var(--ease-soft), transform .55s var(--ease-pop);
+}
+.folder-tile:hover .folder-thing{ opacity: 1; transform: translateY(-22%); }
+.folder-thing svg{ width: 56%; }
+
+.folder-meta{
+  margin-top: 16px;
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--c-bark);
+}
+.folder-name{
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 500;
+  margin: 4px 0 4px;
+  letter-spacing: 0.005em;
+}
+.folder-line{
+  font-size: 13px; color: var(--c-bark);
+  line-height: 1.5;
+}
+.folder-status{
+  display: inline-flex; align-items: center; gap: 5px;
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+}
+.folder-status i{ width: 6px; height: 6px; border-radius: 50%; background: var(--c-sage); }
+
+/* ============ Project window (modal deep-dive) ============ */
+.window-scrim{
+  position: fixed; inset: 0;
+  background: rgba(52,11,1,.45);
+  backdrop-filter: blur(8px);
+  z-index: 500;
+  opacity: 0; pointer-events: none;
+  transition: opacity .4s var(--ease-soft);
+}
+.window-scrim.is-open{ opacity: 1; pointer-events: auto; }
+
+.project-window{
+  position: fixed;
+  top: 50%; left: 50%;
+  width: min(1100px, 94vw);
+  height: min(86vh, 920px);
+  transform: translate(-50%, -50%) scale(.96);
+  background: var(--c-cream);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-window);
+  z-index: 600;
+  opacity: 0; pointer-events: none;
+  transition: opacity .35s var(--ease-soft), transform .45s var(--ease-soft);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--c-glass-stroke);
+}
+.project-window.is-open{
+  opacity: 1; pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+.win-header{
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 18px;
+  background: rgba(246,244,243,.85);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--c-glass-stroke);
+  flex-shrink: 0;
+}
+.win-dots{ display: flex; gap: 7px; }
+.win-dots .d{ width: 12px; height: 12px; border-radius: 50%; }
+.win-dots .d.r{ background: #e08e7c; }
+.win-dots .d.y{ background: #e2c181; }
+.win-dots .d.g{ background: #94b18d; }
+.win-title{
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--c-bark);
+  margin: 0 auto;
+}
+.win-close{
+  font-size: 12px; padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--c-glass-stroke);
+  font-family: var(--font-mono);
+  letter-spacing: .12em; text-transform: uppercase;
+}
+.win-close:hover{ background: var(--c-ink); color: var(--c-cream); border-color: var(--c-ink); }
+
+.win-body{ flex: 1; overflow-y: auto; padding: 0; }
+.win-body::-webkit-scrollbar{ width: 8px; }
+.win-body::-webkit-scrollbar-thumb{ background: rgba(52,11,1,.18); border-radius: 4px; }
+
+.proj-hero{
+  position: relative;
+  padding: 60px 56px 40px;
+  background: var(--proj-accent, var(--c-mint));
+  color: var(--c-ink);
+  overflow: hidden;
+}
+.proj-hero.is-dark{ background: var(--c-ink); color: var(--c-cream); }
+.proj-hero.is-dark .proj-meta-grid div span{ color: rgba(246,244,243,.65); }
+.proj-eyebrow{
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.proj-title{
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5.6vw, 80px);
+  font-weight: 500; letter-spacing: -0.005em;
+  line-height: 1; margin: 0 0 24px;
+}
+.proj-tagline{
+  max-width: 540px; font-size: 16px; line-height: 1.6;
+  margin: 0 0 36px;
+}
+.proj-meta-grid{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  border-top: 1px solid currentColor;
+  padding-top: 22px;
+  font-size: 13px;
+}
+.proj-meta-grid div span{
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--c-bark);
+  margin-bottom: 4px;
+}
+@media (max-width: 760px){
+  .proj-hero{ padding: 36px 24px 28px; }
+  .proj-meta-grid{ grid-template-columns: repeat(2, 1fr); }
+}
+.proj-section{
+  padding: 56px;
+  border-bottom: 1px solid var(--c-glass-stroke);
+}
+@media (max-width: 760px){ .proj-section{ padding: 36px 24px; } }
+.proj-section .label{
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--c-bark); margin-bottom: 16px;
+}
+.proj-section h3{
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3vw, 42px);
+  font-weight: 400; letter-spacing: -0.005em;
+  line-height: 1.15; margin: 0 0 22px;
+  max-width: 22ch;
+}
+.proj-section p{
+  font-size: 16px; line-height: 1.7;
+  max-width: 64ch; margin: 0 0 1em;
+}
+.two-col{
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+}
+@media (max-width: 760px){ .two-col{ grid-template-columns: 1fr; gap: 30px; } }
+.proj-figure-grid{
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+  margin-top: 30px;
+}
+.proj-figure-grid .ph{
+  aspect-ratio: 4/3;
+  display: grid; place-items: center;
+  font-family: var(--font-display); font-style: italic;
+  color: var(--c-bark);
+  font-size: 22px;
+  background: linear-gradient(135deg, var(--c-mint), var(--c-cream));
+  border-radius: var(--r);
+}
+.proj-figure-grid .ph.dark{ background: linear-gradient(135deg, var(--c-ink), var(--c-bark)); color: var(--c-cream); }
+.proj-figure-grid .ph.sage{ background: linear-gradient(135deg, var(--c-sage), var(--c-mint)); }
+.proj-figure-grid .ph.cream{ background: linear-gradient(135deg, #efe6dc, var(--c-cream)); }
+.bullets{ list-style: none; padding: 0; margin: 0; }
+.bullets li{
+  position: relative; padding-left: 22px; margin-bottom: 12px;
+  font-size: 16px; line-height: 1.55;
+}
+.bullets li::before{
+  content:''; position: absolute; left: 0; top: 11px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--c-sage);
+}
+.cta-row{ display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.cta-row .btn{
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 18px;
+  border-radius: var(--r);
+  border: 1px solid var(--c-ink);
+  font-size: 13px;
+  font-family: var(--font-mono);
+  letter-spacing: .14em; text-transform: uppercase;
+  transition: all .3s var(--ease-soft);
+}
+.cta-row .btn.primary{ background: var(--c-ink); color: var(--c-cream); }
+.cta-row .btn:hover{ transform: translateY(-2px); }
+
+/* ============ Bulletin board (playground) ============ */
+#playground{
+  padding: 100px 0 120px;
+  position: relative;
+}
+.board-frame{
+  border-radius: 22px;
+  padding: 14px;
+  background: linear-gradient(160deg, #d6cfc4 0%, #c9c0b3 20%, #bfb5a6 80%, #b5aa9a 100%);
+  box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 24px 70px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.5), inset 0 -1px 0 rgba(0,0,0,.10);
+}
+.board-cork{
+  border-radius: 12px;
+  background: var(--c-paper);
+  background-image:
+    radial-gradient(rgba(180,160,130,.28) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+  position: relative;
+  min-height: 600px;
+  overflow: hidden;
+  padding: 30px;
+}
+.board-cork::before{
+  content:''; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.25 0 0 0 0 0.16 0 0 0 0.10 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+  background-size: 240px;
+  opacity: .35;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+.pin-item{
+  position: absolute;
+  cursor: grab;
+  filter: drop-shadow(0 14px 22px rgba(52,11,1,.16));
+  transition: transform .3s var(--ease-pop);
+}
+.pin-item:hover{ transform: scale(1.04) rotate(0deg) !important; z-index: 20; }
+.pin-item:active{ cursor: grabbing; }
+.pin-item .pin{
+  position: absolute; left: 50%; top: -8px;
+  transform: translateX(-50%);
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ff8b87, #d24a44);
+  box-shadow: 0 2px 4px rgba(0,0,0,.3);
+  z-index: 2;
+}
+.pin-photo{
+  width: 200px;
+  background: var(--c-cream);
+  padding: 8px 8px 28px;
+}
+.pin-photo .ph{
+  width: 100%; aspect-ratio: 1;
+  background: linear-gradient(135deg, var(--c-mint), var(--c-cream));
+  position: relative;
+  overflow: hidden;
+}
+.pin-photo .cap{
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: 16px;
+  color: var(--c-bark);
+  margin-top: 8px;
+}
+.pin-note{
+  width: 200px; aspect-ratio: 1;
+  background: var(--c-butter);
+  padding: 22px;
+  font-family: var(--font-hand);
+  font-size: 19px;
+  color: var(--c-bark);
+  display: grid;
+  align-items: center;
+  text-align: center;
+  line-height: 1.3;
+  position: relative;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.10);
+}
+.pin-note.mint{ background: var(--c-mint); }
+.pin-note.rose{ background: var(--c-rose); color: var(--c-cream); }
+.pin-note .tape{
+  position: absolute; left: 50%; top: -6px;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 60px; height: 18px;
+  background: rgba(255,255,255,.55);
+}
+.pin-tag{
+  background: var(--c-cream);
+  border: 1px solid var(--c-glass-stroke);
+  border-radius: var(--r);
+  padding: 14px 20px;
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--c-ink);
+}
+
+/* ============ About ============ */
+#about{
+  padding: 140px 0 120px;
+}
+.about-grid{
+  display: grid; grid-template-columns: 1.4fr 1fr; gap: 80px;
+  align-items: start;
+}
+@media (max-width: 880px){ .about-grid{ grid-template-columns: 1fr; gap: 40px; } }
+.about-headline{
+  font-family: var(--font-display);
+  font-size: clamp(34px, 4.4vw, 64px);
+  line-height: 1.15; font-weight: 400; letter-spacing: -0.005em;
+  margin: 12px 0 24px;
+}
+.about-headline em{ font-style: italic; color: var(--c-bark); }
+.about-body{ font-size: 17px; line-height: 1.75; max-width: 60ch; }
+.about-body p + p{ margin-top: 1em; }
+.about-card{
+  background: rgba(246,244,243,.75);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--c-glass-stroke);
+  border-radius: var(--r-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-soft);
+}
+.about-card h4{
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--c-bark);
+  margin: 24px 0 10px;
+}
+.about-card h4:first-child{ margin-top: 0; }
+.about-card .row{
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--c-glass-stroke);
+  font-size: 14px;
+}
+.about-card .row:last-child{ border-bottom: 0; }
+
+/* ============ Contact ============ */
+#contact{
+  padding: 100px 0 120px;
+  position: relative;
+}
+.contact-card{
+  background: var(--c-ink);
+  color: var(--c-cream);
+  border-radius: var(--r-lg);
+  padding: 80px 60px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-window);
+}
+.contact-card::after{
+  content:''; position: absolute;
+  width: 700px; height: 700px;
+  border-radius: 50%;
+  right: -240px; top: -240px;
+  background: radial-gradient(circle, var(--c-sage) 0%, transparent 60%);
+  opacity: .35;
+  filter: blur(40px);
+  pointer-events: none;
+}
+.contact-eyebrow{
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(246,244,243,.7);
+  margin-bottom: 24px;
+}
+.contact-headline{
+  font-family: var(--font-display);
+  font-size: clamp(48px, 7.2vw, 116px);
+  line-height: .98; font-weight: 400; letter-spacing: -0.005em;
+  margin: 0 0 50px;
+  position: relative; z-index: 1;
+}
+.contact-headline em{ color: var(--c-mint); font-style: italic; }
+.contact-grid{
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 36px;
+  position: relative; z-index: 1;
+}
+@media (max-width: 760px){ .contact-grid{ grid-template-columns: 1fr; } .contact-card{ padding: 50px 28px; } }
+.contact-grid .label{
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(246,244,243,.55);
+  margin-bottom: 8px;
+}
+.social-morph{
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: .04em;
+  position: relative;
+  display: inline-flex; align-items: baseline;
+  overflow: hidden;
+}
+.social-morph .text{
+  display: inline-block;
+  transition: transform .45s var(--ease-soft), opacity .35s;
+}
+.social-morph .ic{
+  position: absolute; left: 0; bottom: 0;
+  font-family: var(--font-display);
+  font-size: 26px; letter-spacing: .04em;
+  font-weight: 500;
+  transform: translateY(110%);
+  transition: transform .55s var(--ease-pop);
+  white-space: nowrap;
+}
+.social-morph:hover .text{ transform: translateY(-110%); opacity: 0; }
+.social-morph:hover .ic{ transform: translateY(0); }
+
+/* ============ Footer ============ */
+footer{
+  padding: 40px 0 30px;
+  border-top: 1px solid var(--c-glass-stroke);
+  font-family: var(--font-mono);
+  font-size: 12px; letter-spacing: .08em;
+  color: var(--c-bark);
+  text-transform: uppercase;
+}
+footer .wrap{
+  display: flex; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+
+/* ============ Reveal helpers ============ */
+.reveal-fade{ opacity: 0; transform: translateY(24px); }
+
+/* ============ Preloader ============ */
+.preload{
+  position: fixed; inset: 0;
+  background: var(--c-cream);
+  z-index: 9000;
+  display: grid; place-items: center;
+  transition: opacity .8s var(--ease-soft);
+}
+.preload.is-gone{ opacity: 0; pointer-events: none; }
+.preload .pl-mark{
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--c-ink);
+  position: relative;
+}
+.preload .pl-mark::after{
+  content:''; position: absolute; left: 0; right: 0; bottom: -10px;
+  height: 1px; background: var(--c-bark);
+  transform-origin: left;
+  animation: plload 1.6s var(--ease-soft) forwards;
+}
+@keyframes plload{
+  from{ transform: scaleX(0); }
+  to  { transform: scaleX(1); }
+}
+</style>
+</head>
+<body>
+
+<!-- Preloader -->
+<div class="preload" id="preload">
+  <div class="pl-mark">amritha</div>
+</div>
+
+<!-- WebGL backdrop -->
+<canvas id="bg-canvas"></canvas>
+<div class="bg-noise"></div>
+<div class="bg-stars" id="bgStars"></div>
+
+<!-- Drifting droplets -->
+<div class="droplets" id="droplets" aria-hidden="true">
+  <div class="droplet" style="background:#BED4C2; width:380px; height:380px; top:-10%; left:-8%;"></div>
+  <div class="droplet" style="background:#7B967A; width:260px; height:260px; top:30%; right:-6%; opacity:.32;"></div>
+  <div class="droplet" style="background:#6B4028; width:200px; height:200px; bottom:8%; left:18%; opacity:.18;"></div>
+  <div class="droplet" style="background:#BED4C2; width:300px; height:300px; bottom:-10%; right:8%; opacity:.36;"></div>
+</div>
+
+<!-- Custom cursor -->
+<div class="cursor-dot" id="cdot"></div>
+<div class="cursor-ring" id="cring"><span class="label" id="clabel">view</span></div>
+
+<!-- Menubar -->
+<nav class="menubar" aria-label="Primary">
+  <span class="live-dot"></span>
+  <span class="brand">amritha</span>
+  <span class="ln"></span>
+  <div class="nav-links">
+    <a href="#intro" data-cursor="hover">work</a>
+    <a href="#desktop" data-cursor="hover">projects</a>
+    <a href="#playground" data-cursor="hover">playground</a>
+    <a href="#about" data-cursor="hover">about</a>
+    <a href="#contact" data-cursor="hover">contact</a>
+  </div>
+  <div class="meta">
+    <span id="clock">--:--</span>
+    <span>Brisbane</span>
+  </div>
+</nav>
+
+
+<!-- ============================ HERO ============================ -->
+<section id="hero">
+
+  <!-- Decorative star polygons floating -->
+  <div class="starshape" style="top: 10%; right: 12%; width: 76px;">
+    <svg viewBox="0 0 100 100"><polygon points="50,2 58,38 95,42 64,62 76,98 50,76 24,98 36,62 5,42 42,38" fill="none" stroke="#6B4028" stroke-width="1.5"/></svg>
+  </div>
+  <div class="starshape" style="top: 20%; left: 8%; width: 44px;">
+    <svg viewBox="0 0 100 100"><polygon points="50,2 58,38 95,42 64,62 76,98 50,76 24,98 36,62 5,42 42,38" fill="#7B967A" opacity=".55"/></svg>
+  </div>
+  <div class="starshape" style="bottom: 26%; left: 38%; width: 28px;">
+    <svg viewBox="0 0 100 100"><polygon points="50,2 58,38 95,42 64,62 76,98 50,76 24,98 36,62 5,42 42,38" fill="#340B01"/></svg>
+  </div>
+  <div class="starshape" style="top: 60%; right: 8%; width: 56px;">
+    <svg viewBox="0 0 100 100"><polygon points="50,2 58,38 95,42 64,62 76,98 50,76 24,98 36,62 5,42 42,38" fill="#BED4C2"/></svg>
+  </div>
+
+  <div class="hero-stage" id="heroStage">
+
+    <!-- Center title -->
+    <div class="hero-titlewrap">
+      <div class="hero-eyebrow"><span class="live-dot"></span> Portfolio · Brisbane · 2026</div>
+
+      <h1 class="hero-title" aria-label="Bilingual by birth. Inclusive by design.">
+        <span class="row">
+          <span class="word"><span>Bilingual</span></span>
+          <span class="word"><span>by</span></span>
+          <span class="accent" aria-hidden="true">
+            <svg viewBox="0 0 100 100"><polygon points="50,2 58,38 95,42 64,62 76,98 50,76 24,98 36,62 5,42 42,38" fill="#7B967A"/></svg>
+          </span>
+          <span class="word"><span>birth.</span></span>
+        </span>
+        <br/>
+        <span class="row">
+          <span class="word ital"><span>Inclusive</span></span>
+          <span class="word ital"><span>by</span></span>
+          <span class="word ital"><span>design.</span></span>
+        </span>
+      </h1>
+
+      <div class="hero-subline">
+        <span>South Asian Australian designer</span>
+        <span class="swatch">
+          <i style="background:#340B01"></i>
+          <i style="background:#6B4028"></i>
+          <i style="background:#7B967A"></i>
+          <i style="background:#BED4C2"></i>
+          <i style="background:#F6F4F3"></i>
+        </span>
+        <span>Print, UX, Web, Interactive</span>
+      </div>
+    </div>
+
+
+    <!-- 1. Lanyard ID badge -->
+    <div class="sticker s-lanyard" id="stickLanyard" data-cursor="drag">
+      <div class="lanyard">
+        <div class="strap"></div>
+        <div class="badge-card">
+          <div class="badge-inner">
+            <div class="badge-tamil">அமிருதா</div>
+            <div class="badge-role">Designer · est. 2024</div>
+            <div class="badge-photo">
+              <svg viewBox="0 0 64 64" fill="none">
+                <circle cx="32" cy="24" r="11" fill="#F6F4F3"/>
+                <path d="M10 60 Q10 40 32 40 Q54 40 54 60 Z" fill="#F6F4F3"/>
+                <path d="M22 22 Q22 12 32 12 Q42 12 42 22 Q42 18 38 18 Q34 14 32 16 Q30 14 26 18 Q22 18 22 22 Z" fill="#340B01"/>
+              </svg>
+            </div>
+            <div class="badge-name">Amritha Anil</div>
+            <div class="badge-loc">Brisbane · QLD</div>
+          </div>
+        </div>
+      </div>
+      <span class="nudge">id badge</span>
+    </div>
+
+
+    <!-- 2. Boarding pass / ticket -->
+    <div class="sticker s-ticket" id="stickTicket" data-cursor="drag">
+      <div class="ticket">
+        <div class="ticket-main">
+          <div class="ticket-tag">Boarding pass · 6:00pm</div>
+          <div class="ticket-route">PRINT <span class="arrow">→</span> WEB</div>
+          <div class="ticket-row">
+            <div>From <strong>Marketing</strong></div>
+            <div>To <strong>Interactive</strong></div>
+          </div>
+          <div class="ticket-row">
+            <div>Gate <strong>B26</strong></div>
+            <div>Seat <strong>14F</strong></div>
+          </div>
+        </div>
+        <div class="ticket-stub">
+          <span class="num">A.A.</span>
+          <span>Class · Senior</span>
+        </div>
+      </div>
+      <span class="nudge">a one way ticket</span>
+    </div>
+
+
+    <!-- 3. Vinyl record + sleeve -->
+    <a class="sticker s-vinyl" id="stickVinyl" href="#" data-cursor="drag" style="text-decoration: none; color: inherit;">
+      <div class="vinyl-card">
+        <div class="vinyl-disc"></div>
+        <div class="vinyl-sleeve">
+          <div class="pad">
+            <svg viewBox="0 0 200 200" preserveAspectRatio="none">
+              <g opacity="0.55" fill="none" stroke="#340B01" stroke-width="1.5">
+                <polygon points="100,40 110,70 140,72 116,90 124,118 100,102 76,118 84,90 60,72 90,70"/>
+                <circle cx="40" cy="160" r="14"/>
+                <circle cx="160" cy="50" r="10"/>
+                <path d="M30 40 Q60 60 30 100 Q60 140 30 180" stroke-dasharray="2 4"/>
+              </g>
+            </svg>
+          </div>
+          <div class="label">Now spinning</div>
+          <h4>Studio playlist</h4>
+          <p>21 projects deep, ongoing</p>
+        </div>
+      </div>
+      <span class="nudge">spins on hover</span>
+    </a>
+
+
+    <!-- 4. Mac Folder with pop-out items -->
+    <div class="sticker s-folder" id="stickFolder" data-cursor="hover">
+      <div class="mac-folder">
+        <!-- folder back -->
+        <div class="back">
+          <svg viewBox="0 0 200 170">
+            <path d="M0 28 C0 18, 8 10, 18 10 L70 10 Q76 10, 80 4 Q84 -2, 90 -2 L182 -2 Q192 -2, 192 8 L192 28 Z" fill="#7B967A"/>
+            <rect x="0" y="22" width="200" height="148" rx="10" fill="#7B967A"/>
+          </svg>
+        </div>
+        <!-- floating items -->
+        <div class="item i1">
+          <svg width="56" height="56" viewBox="0 0 64 64">
+            <rect x="6" y="10" width="44" height="48" rx="3" fill="#F6F4F3" stroke="#340B01" stroke-width="2"/>
+            <path d="M18 24 H42 M18 32 H42 M18 40 H38" stroke="#7B967A" stroke-width="2"/>
+            <path d="M42 4 L60 22 L52 30 L34 12 Z" fill="#E8B07A" stroke="#340B01" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="item i2">
+          <svg width="56" height="56" viewBox="0 0 64 64">
+            <rect x="6" y="6" width="52" height="42" rx="3" fill="#340B01"/>
+            <rect x="10" y="10" width="44" height="32" fill="#BED4C2"/>
+            <rect x="22" y="50" width="20" height="3" fill="#340B01"/>
+            <rect x="14" y="56" width="36" height="3" rx="1" fill="#340B01"/>
+          </svg>
+        </div>
+        <div class="item i3">
+          <svg width="56" height="56" viewBox="0 0 64 64">
+            <rect x="14" y="6" width="36" height="50" rx="2" fill="#340B01"/>
+            <rect x="18" y="10" width="28" height="14" fill="#BED4C2"/>
+            <circle cx="22" cy="36" r="3" fill="#E8B07A"/>
+            <circle cx="32" cy="36" r="3" fill="#7B967A"/>
+            <circle cx="42" cy="36" r="3" fill="#F6F4F3"/>
+            <rect x="20" y="44" width="24" height="3" rx="1" fill="#F6F4F3"/>
+          </svg>
+        </div>
+        <!-- folder front -->
+        <div class="front">
+          <svg viewBox="0 0 200 170">
+            <path d="M0 30 H200 V160 Q200 168, 192 168 L8 168 Q0 168, 0 160 Z" fill="#8db49a"/>
+            <path d="M0 30 H200 V40 H0 Z" fill="rgba(255,255,255,.15)"/>
+          </svg>
+        </div>
+      </div>
+      <span class="nudge">hover to peek inside</span>
+    </div>
+
+
+    <!-- 5. Ripped paper note (hidden by default but kept for tablet) -->
+    <div class="sticker s-paper" id="stickPaper">
+      <div class="rippedpaper">
+        <div class="tape"></div>
+        <div class="paper">
+          I think,<br>then I make.
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 6. Photo collage -->
+    <div class="sticker s-collage" id="stickCollage" data-cursor="drag">
+      <div class="collage">
+        <div class="polaroid p1">
+          <div class="pic" style="background: linear-gradient(135deg, #BED4C2, #7B967A);">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;opacity:.35;">
+              <polygon points="50,15 60,45 90,48 65,68 75,95 50,78 25,95 35,68 10,48 40,45" fill="#340B01"/>
+            </svg>
+          </div>
+          <div class="cap">Mirchi · 2024</div>
+        </div>
+        <div class="polaroid p2">
+          <div class="pic" style="background: linear-gradient(135deg, #E8B07A, #F6F4F3);"></div>
+          <div class="cap">Sun &amp; D</div>
+        </div>
+        <div class="polaroid p3">
+          <div class="pic" style="background: linear-gradient(135deg, #340B01, #6B4028);"></div>
+          <div class="cap">Winn Lane</div>
+        </div>
+        <div class="peeker">
+          <svg viewBox="0 0 100 100">
+            <polygon points="50,2 58,38 95,42 64,62 76,98 50,76 24,98 36,62 5,42 42,38" fill="#E8B07A" stroke="#340B01" stroke-width="2"/>
+          </svg>
+        </div>
+      </div>
+      <span class="nudge">drag, peek, repeat</span>
+    </div>
+
+
+    <!-- 7. Terminal -->
+    <div class="sticker s-terminal" id="stickTerminal" data-cursor="drag">
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dots"><i></i><i></i><i></i></div>
+          <div class="title">amritha — zsh</div>
+          <div style="width: 40px;"></div>
+        </div>
+        <div class="terminal-body">
+          <div><span class="pr">~ $</span> whoami</div>
+          <div class="out">marketing &amp; interactive design grad,<br>brisbane based, brown skin first</div>
+          <div><span class="pr">~ $</span> ls work/</div>
+          <div class="out">mirchi · sund · nestify · travel · newlyf · winnlane</div>
+          <div><span class="pr">~ $</span> echo $vibe</div>
+          <div class="out">"diversity is the premise, not the footnote"</div>
+          <div><span class="pr">~ $</span> <span class="blink"></span></div>
+        </div>
+      </div>
+      <span class="nudge">she really wrote a terminal</span>
+    </div>
+
+
+    <!-- 8. Postage stamp -->
+    <div class="sticker s-stamp" id="stickStamp" data-cursor="drag">
+      <div class="stamp">
+        <div class="body">
+          <div class="top">Brisbane → anywhere</div>
+          <div class="num">★</div>
+          <div class="bot">First class design</div>
+        </div>
+      </div>
+      <span class="nudge">first class only</span>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================ MARQUEE ============================ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marquee">
+    <span>Marketing</span><span class="star">✦</span>
+    <span>Interactive</span><span class="star">✦</span>
+    <span>Cultural inclusivity</span><span class="star">✦</span>
+    <span>Accessibility</span><span class="star">✦</span>
+    <span>Print</span><span class="star">✦</span>
+    <span>UX</span><span class="star">✦</span>
+    <span>Web</span><span class="star">✦</span>
+    <span>Brand</span><span class="star">✦</span>
+    <span>Multilingual</span><span class="star">✦</span>
+    <span>Marketing</span><span class="star">✦</span>
+    <span>Interactive</span><span class="star">✦</span>
+    <span>Cultural inclusivity</span><span class="star">✦</span>
+    <span>Accessibility</span><span class="star">✦</span>
+  </div>
+</div>
+
+
+<!-- ============================ INTRO ============================ -->
+<section id="intro">
+  <div class="wrap">
+    <div class="intro-grid">
+      <div class="intro-label reveal-fade">01 · who, briefly</div>
+      <div>
+        <h2 class="intro-headline reveal-fade">Designing for the people that health posters and shop signs and tech apps usually <em>forget about</em>.</h2>
+        <div class="intro-body reveal-fade" style="margin-top: 30px;">
+          <p>I trained in Marketing and Interactive Design, which is a fancy way of saying I argue a lot about the message and the kerning in the same afternoon. The work in here spans a Canberra restaurant menu, a sun safety app for South Asian adults in Queensland, a smart home prototype, a retirement community website, a travel blog I built mostly to teach myself JavaScript, and an arcade cabinet sitting in a laneway in Fortitude Valley.</p>
+          <p>Pick a folder, scroll the bulletin, drag the polaroids around. The hero up there is a real working desk, not a screenshot.</p>
+        </div>
+        <div class="tag-row reveal-fade">
+          <span class="tag">Print</span>
+          <span class="tag">UX / UI</span>
+          <span class="tag">Web</span>
+          <span class="tag">Interactive</span>
+          <span class="tag">Brand</span>
+          <span class="tag">Multilingual</span>
+          <span class="tag">QLD &amp; remote</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ PROJECTS / FINDER ============================ -->
+<section id="desktop">
+  <div class="wrap">
+    <div class="desk-header">
+      <h2 class="desk-title reveal-fade">Six <em>folders.</em><br>Six different briefs.</h2>
+      <p class="desk-sub reveal-fade">Click any folder to open the full case study. Some are commissioned, some sit at prototype, one runs in an actual cabinet in Brisbane.</p>
+    </div>
+
+    <div class="finder reveal-fade">
+      <div class="finder-bar">
+        <div class="finder-dots"><i></i><i></i><i></i></div>
+        <div class="finder-path">~ / amritha / portfolio / 2026</div>
+        <div class="finder-tools">
+          <span>Sort</span>
+          <span>View</span>
+        </div>
+      </div>
+
+      <div class="finder-body">
+
+        <aside class="finder-side">
+          <div class="group">Favourites</div>
+          <div class="item is-active" data-cursor="hover">
+            <span class="ic">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B4028" stroke-width="1.6"><path d="M3 10l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            </span> Projects
+          </div>
+          <div class="item" data-cursor="hover">
+            <span class="ic">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B4028" stroke-width="1.6"><polygon points="12 2 15 8 22 9 17 14 18 21 12 17 6 21 7 14 2 9 9 8 12 2"/></svg>
+            </span> Pinned
+          </div>
+          <div class="item" data-cursor="hover">
+            <span class="ic">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B4028" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+            </span> Live
+          </div>
+
+          <div class="group" style="margin-top: 18px;">Tags</div>
+          <div class="item" data-cursor="hover" data-filter="print">
+            <span class="ic"><i style="width:8px;height:8px;border-radius:50%;background:#7B967A;"></i></span> Print &amp; brand
+          </div>
+          <div class="item" data-cursor="hover" data-filter="ux">
+            <span class="ic"><i style="width:8px;height:8px;border-radius:50%;background:#E8B07A;"></i></span> UX / UI
+          </div>
+          <div class="item" data-cursor="hover" data-filter="web">
+            <span class="ic"><i style="width:8px;height:8px;border-radius:50%;background:#6B4028;"></i></span> Web
+          </div>
+          <div class="item" data-cursor="hover" data-filter="interactive">
+            <span class="ic"><i style="width:8px;height:8px;border-radius:50%;background:#340B01;"></i></span> Interactive
+          </div>
+        </aside>
+
+        <main class="finder-main">
+
+          <div class="folders-grid" id="foldersGrid">
+
+            <!-- Mirchi -->
+            <article class="folder-tile" data-project="mirchi" data-cat="print" data-cursor="hover">
+              <div class="folder-icon">
+                <div class="folder-back">
+                  <svg viewBox="0 0 200 170">
+                    <path d="M0 28 C0 18, 8 10, 18 10 L70 10 Q76 10, 80 4 Q84 -2, 90 -2 L182 -2 Q192 -2, 192 8 L192 28 Z" fill="#9aaa92"/>
+                    <rect x="0" y="22" width="200" height="148" rx="10" fill="#9aaa92"/>
+                  </svg>
+                </div>
+                <div class="folder-thing">
+                  <svg viewBox="0 0 100 100"><path d="M50 6 Q60 30 56 50 Q52 70 50 92 Q48 70 44 50 Q40 30 50 6 Z" fill="#c64d2e" stroke="#340B01" stroke-width="2"/></svg>
+                </div>
+                <div class="folder-front">
+                  <svg viewBox="0 0 200 170"><path d="M0 30 H200 V160 Q200 168, 192 168 L8 168 Q0 168, 0 160 Z" fill="#aebca5"/></svg>
+                </div>
+              </div>
+              <div class="folder-meta"><span>01 · 2024</span><span>print</span></div>
+              <h3 class="folder-name">Mirchi</h3>
+              <p class="folder-line">Menu and identity refresh for an Indian restaurant in Ngunnawal, Canberra. Started over dinner.</p>
+              <span class="folder-status"><i></i> Commissioned</span>
+            </article>
+
+            <!-- Sun & D -->
+            <article class="folder-tile" data-project="sund" data-cat="ux" data-cursor="hover">
+              <div class="folder-icon">
+                <div class="folder-back">
+                  <svg viewBox="0 0 200 170">
+                    <path d="M0 28 C0 18, 8 10, 18 10 L70 10 Q76 10, 80 4 Q84 -2, 90 -2 L182 -2 Q192 -2, 192 8 L192 28 Z" fill="#c89776"/>
+                    <rect x="0" y="22" width="200" height="148" rx="10" fill="#c89776"/>
+                  </svg>
+                </div>
+                <div class="folder-thing">
+                  <svg viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="22" fill="#E8B07A"/>
+                    <g stroke="#340B01" stroke-width="2.5" stroke-linecap="round">
+                      <line x1="50" y1="6" x2="50" y2="16"/>
+                      <line x1="50" y1="84" x2="50" y2="94"/>
+                      <line x1="6" y1="50" x2="16" y2="50"/>
+                      <line x1="84" y1="50" x2="94" y2="50"/>
+                      <line x1="18" y1="18" x2="26" y2="26"/>
+                      <line x1="74" y1="74" x2="82" y2="82"/>
+                      <line x1="82" y1="18" x2="74" y2="26"/>
+                      <line x1="26" y1="74" x2="18" y2="82"/>
+                    </g>
+                  </svg>
+                </div>
+                <div class="folder-front">
+                  <svg viewBox="0 0 200 170"><path d="M0 30 H200 V160 Q200 168, 192 168 L8 168 Q0 168, 0 160 Z" fill="#d8a786"/></svg>
+                </div>
+              </div>
+              <div class="folder-meta"><span>02 · 2 months</span><span>ux</span></div>
+              <h3 class="folder-name">Sun &amp; D</h3>
+              <p class="folder-line">Mobile prototype for a QLD clinic. Sun safety and Vitamin D for South Asian adults. Six languages.</p>
+              <span class="folder-status"><i></i> Freelance · NDA</span>
+            </article>
+
+            <!-- Nestify -->
+            <article class="folder-tile" data-project="nestify" data-cat="ux" data-cursor="hover">
+              <div class="folder-icon">
+                <div class="folder-back">
+                  <svg viewBox="0 0 200 170">
+                    <path d="M0 28 C0 18, 8 10, 18 10 L70 10 Q76 10, 80 4 Q84 -2, 90 -2 L182 -2 Q192 -2, 192 8 L192 28 Z" fill="#a4bca8"/>
+                    <rect x="0" y="22" width="200" height="148" rx="10" fill="#a4bca8"/>
+                  </svg>
+                </div>
+                <div class="folder-thing">
+                  <svg viewBox="0 0 100 100">
+                    <path d="M50 14 L88 46 V88 H12 V46 Z" fill="#7B967A" stroke="#340B01" stroke-width="2"/>
+                    <rect x="42" y="60" width="16" height="28" fill="#F6F4F3"/>
+                    <circle cx="50" cy="76" r="2" fill="#340B01"/>
+                  </svg>
+                </div>
+                <div class="folder-front">
+                  <svg viewBox="0 0 200 170"><path d="M0 30 H200 V160 Q200 168, 192 168 L8 168 Q0 168, 0 160 Z" fill="#b5cab9"/></svg>
+                </div>
+              </div>
+              <div class="folder-meta"><span>03 · concept</span><span>ux</span></div>
+              <h3 class="folder-name">Nestify</h3>
+              <p class="folder-line">A smart home app built on the idea your house shouldn't feel smarter than you.</p>
+              <span class="folder-status"><i></i> Concept</span>
+            </article>
+
+            <!-- Travel -->
+            <article class="folder-tile" data-project="travel" data-cat="web" data-cursor="hover">
+              <div class="folder-icon">
+                <div class="folder-back">
+                  <svg viewBox="0 0 200 170">
+                    <path d="M0 28 C0 18, 8 10, 18 10 L70 10 Q76 10, 80 4 Q84 -2, 90 -2 L182 -2 Q192 -2, 192 8 L192 28 Z" fill="#7a554a"/>
+                    <rect x="0" y="22" width="200" height="148" rx="10" fill="#7a554a"/>
+                  </svg>
+                </div>
+                <div class="folder-thing">
+                  <svg viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="32" fill="#340B01" stroke="#F6F4F3" stroke-width="2"/>
+                    <ellipse cx="50" cy="50" rx="14" ry="32" fill="none" stroke="#BED4C2" stroke-width="1.5"/>
+                    <line x1="18" y1="50" x2="82" y2="50" stroke="#BED4C2" stroke-width="1.5"/>
+                  </svg>
+                </div>
+                <div class="folder-front">
+                  <svg viewBox="0 0 200 170"><path d="M0 30 H200 V160 Q200 168, 192 168 L8 168 Q0 168, 0 160 Z" fill="#8a665a"/></svg>
+                </div>
+              </div>
+              <div class="folder-meta"><span>04 · personal</span><span>web</span></div>
+              <h3 class="folder-name">Wander Notes</h3>
+              <p class="folder-line">A handcoded travel blog. Half journal, half excuse to write more JavaScript.</p>
+              <span class="folder-status"><i></i> Live</span>
+            </article>
+
+            <!-- New Lyf -->
+            <article class="folder-tile" data-project="newlyf" data-cat="web" data-cursor="hover">
+              <div class="folder-icon">
+                <div class="folder-back">
+                  <svg viewBox="0 0 200 170">
+                    <path d="M0 28 C0 18, 8 10, 18 10 L70 10 Q76 10, 80 4 Q84 -2, 90 -2 L182 -2 Q192 -2, 192 8 L192 28 Z" fill="#d6c8af"/>
+                    <rect x="0" y="22" width="200" height="148" rx="10" fill="#d6c8af"/>
+                  </svg>
+                </div>
+                <div class="folder-thing">
+                  <svg viewBox="0 0 100 100">
+                    <rect x="14" y="42" width="34" height="42" fill="#7B967A"/>
+                    <path d="M14 42 L31 24 L48 42 Z" fill="#6B4028"/>
+                    <rect x="52" y="32" width="34" height="52" fill="#BED4C2"/>
+                    <path d="M52 32 L69 14 L86 32 Z" fill="#340B01"/>
+                  </svg>
+                </div>
+                <div class="folder-front">
+                  <svg viewBox="0 0 200 170"><path d="M0 30 H200 V160 Q200 168, 192 168 L8 168 Q0 168, 0 160 Z" fill="#dfd4be"/></svg>
+                </div>
+              </div>
+              <div class="folder-meta"><span>05 · live</span><span>web</span></div>
+              <h3 class="folder-name">New Lyf, Manly West</h3>
+              <p class="folder-line">A retirement community site. Calm, slow scrolling, big readable type.</p>
+              <span class="folder-status"><i></i> Commissioned</span>
+            </article>
+
+            <!-- Winn Lane -->
+            <article class="folder-tile" data-project="winnlane" data-cat="interactive" data-cursor="hover">
+              <div class="folder-icon">
+                <div class="folder-back">
+                  <svg viewBox="0 0 200 170">
+                    <path d="M0 28 C0 18, 8 10, 18 10 L70 10 Q76 10, 80 4 Q84 -2, 90 -2 L182 -2 Q192 -2, 192 8 L192 28 Z" fill="#4a2618"/>
+                    <rect x="0" y="22" width="200" height="148" rx="10" fill="#4a2618"/>
+                  </svg>
+                </div>
+                <div class="folder-thing">
+                  <svg viewBox="0 0 100 100">
+                    <rect x="22" y="14" width="56" height="68" rx="3" fill="#340B01" stroke="#F6F4F3" stroke-width="1.5"/>
+                    <rect x="28" y="20" width="44" height="22" fill="#BED4C2"/>
+                    <circle cx="36" cy="58" r="4" fill="#E8B07A"/>
+                    <circle cx="50" cy="58" r="4" fill="#7B967A"/>
+                    <circle cx="64" cy="58" r="4" fill="#F6F4F3"/>
+                    <circle cx="50" cy="72" r="6" fill="#F6F4F3"/>
+                  </svg>
+                </div>
+                <div class="folder-front">
+                  <svg viewBox="0 0 200 170"><path d="M0 30 H200 V160 Q200 168, 192 168 L8 168 Q0 168, 0 160 Z" fill="#5b3022"/></svg>
+                </div>
+              </div>
+              <div class="folder-meta"><span>06 · brisbane</span><span>interactive</span></div>
+              <h3 class="folder-name">Winn Lane Cabinet</h3>
+              <p class="folder-line">Three p5.js mini-games living in an arcade cabinet on Winn Lane, Fortitude Valley.</p>
+              <span class="folder-status"><i></i> Installed</span>
+            </article>
+
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ PLAYGROUND / BULLETIN ============================ -->
+<section id="playground">
+  <div class="wrap">
+    <div class="desk-header" style="margin-bottom: 40px;">
+      <h2 class="desk-title reveal-fade">Bits<br>and <em>bobs.</em></h2>
+      <p class="desk-sub reveal-fade">Process scraps, sticky note thinking, things I made between things. Drag them around if it helps.</p>
+    </div>
+    <div class="board-frame reveal-fade">
+      <div class="board-cork" id="boardCork">
+
+        <div class="pin-item" style="left: 4%; top: 6%; transform: rotate(-5deg);" data-cursor="drag">
+          <span class="pin"></span>
+          <div class="pin-photo">
+            <div class="ph" style="background: linear-gradient(135deg, #E8B07A, #F6F4F3);">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;opacity:.5;">
+                <circle cx="50" cy="50" r="22" fill="#340B01"/>
+              </svg>
+            </div>
+            <div class="cap">UV index sketch</div>
+          </div>
+        </div>
+
+        <div class="pin-item" style="left: 28%; top: 4%; transform: rotate(3deg);" data-cursor="drag">
+          <span class="pin" style="background: radial-gradient(circle at 30% 30%, #f9d289, #c47a1c)"></span>
+          <div class="pin-note">
+            <span class="tape"></span>
+            "Diversity is<br>the premise,<br>not the footnote"
+          </div>
+        </div>
+
+        <div class="pin-item" style="left: 52%; top: 8%; transform: rotate(-2deg);" data-cursor="drag">
+          <span class="pin"></span>
+          <div class="pin-photo">
+            <div class="ph" style="background: linear-gradient(135deg, #BED4C2, #7B967A);">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;opacity:.55;">
+                <polygon points="50,20 60,46 88,48 66,66 76,92 50,76 24,92 34,66 12,48 40,46" fill="#340B01"/>
+              </svg>
+            </div>
+            <div class="cap">Mirchi covers</div>
+          </div>
+        </div>
+
+        <div class="pin-item" style="left: 76%; top: 6%; transform: rotate(7deg);" data-cursor="drag">
+          <span class="pin" style="background: radial-gradient(circle at 30% 30%, #b1d8a4, #4d8a3d)"></span>
+          <div class="pin-tag">
+            હેલો · नमस्ते · வணக்கம் · hello
+          </div>
+        </div>
+
+        <div class="pin-item" style="left: 6%; top: 40%; transform: rotate(2deg);" data-cursor="drag">
+          <span class="pin"></span>
+          <div class="pin-note mint">
+            <span class="tape"></span>
+            ask better<br>questions earlier<br>than people<br>expect.
+          </div>
+        </div>
+
+        <div class="pin-item" style="left: 32%; top: 42%; transform: rotate(-3deg);" data-cursor="drag">
+          <span class="pin" style="background: radial-gradient(circle at 30% 30%, #b8d8e6, #4a8aa6)"></span>
+          <div class="pin-photo">
+            <div class="ph" style="background: linear-gradient(135deg, #340B01, #6B4028);">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;opacity:.6;">
+                <rect x="22" y="22" width="56" height="56" rx="3" fill="#BED4C2"/>
+                <circle cx="36" cy="62" r="4" fill="#E8B07A"/>
+                <circle cx="50" cy="62" r="4" fill="#7B967A"/>
+              </svg>
+            </div>
+            <div class="cap">Cabinet test build</div>
+          </div>
+        </div>
+
+        <div class="pin-item" style="left: 56%; top: 44%; transform: rotate(5deg);" data-cursor="drag">
+          <span class="pin"></span>
+          <div class="pin-photo">
+            <div class="ph" style="background: linear-gradient(135deg, #6B4028, #340B01);"></div>
+            <div class="cap">Travel film roll</div>
+          </div>
+        </div>
+
+        <div class="pin-item" style="left: 78%; top: 42%; transform: rotate(-4deg);" data-cursor="drag">
+          <span class="pin" style="background: radial-gradient(circle at 30% 30%, #f4a4a0, #b04040)"></span>
+          <div class="pin-note rose">
+            <span class="tape"></span>
+            print first.<br>then everything else.
+          </div>
+        </div>
+
+        <div class="pin-item" style="left: 14%; top: 78%; transform: rotate(-6deg);" data-cursor="drag">
+          <span class="pin"></span>
+          <div class="pin-tag" style="background: var(--c-ink); color: var(--c-cream); border-color: transparent;">
+            Brisbane · QLD · 2026
+          </div>
+        </div>
+
+        <div class="pin-item" style="left: 38%; top: 80%; transform: rotate(4deg);" data-cursor="drag">
+          <span class="pin" style="background: radial-gradient(circle at 30% 30%, #e6cda0, #9a7820)"></span>
+          <div class="pin-photo">
+            <div class="ph" style="background: linear-gradient(135deg, #BED4C2, #F6F4F3);"></div>
+            <div class="cap">Sun &amp; D wireframes</div>
+          </div>
+        </div>
+
+        <div class="pin-item" style="left: 64%; top: 78%; transform: rotate(-2deg);" data-cursor="drag">
+          <span class="pin"></span>
+          <div class="pin-note">
+            <span class="tape"></span>
+            print kerns,<br>websites breathe,<br>cabinets get<br>sticky.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ ABOUT ============================ -->
+<section id="about">
+  <div class="wrap">
+    <div class="intro-label reveal-fade">02 · about</div>
+    <div class="about-grid" style="margin-top: 24px;">
+      <div>
+        <h2 class="about-headline reveal-fade">Designing well, for me, mostly looks like <em>asking better questions</em> earlier than people expect.</h2>
+        <div class="about-body reveal-fade">
+          <p>My background sits at the intersection of marketing and interactive design. I worry about the funnel and the kerning in the same afternoon, and I find I do better work when I refuse to pick a lane.</p>
+          <p>Most of my work circles a single idea, which is that designing for someone is not the same as designing about them. The Sun &amp; D project, in particular, taught me how often health and lifestyle communication is built around skin tones, accents, and assumptions that quietly leave a lot of people out.</p>
+          <p>I work with restaurants, clinics, retirement communities, and the occasional games cabinet. I'd happily work with you too.</p>
+        </div>
+      </div>
+      <aside class="about-card reveal-fade">
+        <h4>Specialisms</h4>
+        <div class="row"><span>Print &amp; brand</span><span>★★★★★</span></div>
+        <div class="row"><span>UX / UI</span><span>★★★★★</span></div>
+        <div class="row"><span>Web (handcoded)</span><span>★★★★☆</span></div>
+        <div class="row"><span>Interactive / p5.js</span><span>★★★★☆</span></div>
+        <div class="row"><span>Multilingual layout</span><span>★★★★★</span></div>
+
+        <h4>Tools</h4>
+        <div class="row"><span>Figma</span><span>Daily</span></div>
+        <div class="row"><span>InDesign</span><span>Daily</span></div>
+        <div class="row"><span>Illustrator + Photoshop</span><span>Daily</span></div>
+        <div class="row"><span>Mockflow</span><span>Often</span></div>
+        <div class="row"><span>HTML / CSS / JS</span><span>Often</span></div>
+        <div class="row"><span>p5.js</span><span>Often</span></div>
+
+        <h4>Based</h4>
+        <div class="row"><span>Brisbane, QLD</span><span>Australia</span></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ CONTACT ============================ -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-card reveal-fade">
+      <div class="contact-eyebrow">03 · get in touch</div>
+      <h2 class="contact-headline">Have a brief, a half-thought, or a <em>thank you</em>?</h2>
+      <div class="contact-grid">
+        <div>
+          <div class="label">email</div>
+          <a class="social-morph" href="mailto:amritha2825@gmail.com" data-cursor="hover">
+            <span class="text">amritha2825@gmail.com</span>
+            <span class="ic">say hi</span>
+          </a>
+        </div>
+        <div>
+          <div class="label">linkedin</div>
+          <a class="social-morph" href="https://www.linkedin.com/in/amritha-anil-b26556266/" target="_blank" rel="noopener" data-cursor="hover">
+            <span class="text">linkedin / amritha-anil</span>
+            <span class="ic">connect</span>
+          </a>
+        </div>
+        <div>
+          <div class="label">behance</div>
+          <a class="social-morph" href="https://www.behance.net/amrithaanil1" target="_blank" rel="noopener" data-cursor="hover">
+            <span class="text">behance / amrithaanil1</span>
+            <span class="ic">flip through</span>
+          </a>
+        </div>
+        <div>
+          <div class="label">based</div>
+          <a class="social-morph" href="#" data-cursor="hover">
+            <span class="text">brisbane, qld</span>
+            <span class="ic">come visit</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ FOOTER ============================ -->
+<footer>
+  <div class="wrap">
+    <span>© 2026 · Amritha Anil</span>
+    <span>Bilingual by birth · Inclusive by design</span>
+  </div>
+</footer>
+
+
+<!-- Project window -->
+<div class="window-scrim" id="winScrim"></div>
+<div class="project-window" id="projWindow" role="dialog" aria-modal="true">
+  <div class="win-header">
+    <div class="win-dots">
+      <button class="d r" id="winClose" aria-label="Close project window"></button>
+      <span class="d y"></span>
+      <span class="d g"></span>
+    </div>
+    <h4 class="win-title" id="winTitle">project</h4>
+    <button class="win-close" data-cursor="hover" id="winCloseText">close</button>
+  </div>
+  <div class="win-body" id="winBody"></div>
+</div>
+
+
+<script>
+/* =========================================================================
+   PORTFOLIO / SCRIPT
+   - GSAP intros, scroll triggers, marquee, drag-and-throw
+   - Three.js shader background
+   - Custom cursor with hover label
+   - Mac finder folder filtering and project window
+   - Twinkling background stars
+   ========================================================================= */
+
+gsap.registerPlugin(ScrollTrigger, Draggable);
+
+/* ---------- preloader ---------- */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('preload').classList.add('is-gone');
+    runIntro();
+  }, 900);
+});
+
+/* ---------- clock ---------- */
+function tickClock(){
+  const el = document.getElementById('clock');
+  if (!el) return;
+  const d = new Date();
+  el.textContent = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+setInterval(tickClock, 1000); tickClock();
+
+
+/* ---------- background stars ---------- */
+(() => {
+  const wrap = document.getElementById('bgStars');
+  if (!wrap) return;
+  const count = 70;
+  let html = '';
+  for (let i = 0; i < count; i++){
+    const x = (Math.random() * 100).toFixed(2);
+    const y = (Math.random() * 100).toFixed(2);
+    const s = (Math.random() * 2 + 1).toFixed(1);
+    const dur = (Math.random() * 4 + 2).toFixed(2);
+    const dl = (Math.random() * 5).toFixed(2);
+    html += `<span style="left:${x}%; top:${y}%; width:${s}px; height:${s}px; --dur:${dur}s; --delay:${dl}s;"></span>`;
+  }
+  wrap.innerHTML = html;
+})();
+
+
+/* ---------- custom cursor with label ---------- */
+(() => {
+  const dot = document.getElementById('cdot');
+  const ring = document.getElementById('cring');
+  const label = document.getElementById('clabel');
+  let mx = window.innerWidth/2, my = window.innerHeight/2;
+  let rx = mx, ry = my;
+  window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function loop(){
+    rx += (mx - rx) * 0.18;
+    ry += (my - ry) * 0.18;
+    dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
+    ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  const labelMap = {
+    'hover': 'view',
+    'drag':  'drag',
+    'open':  'open'
+  };
+
+  document.addEventListener('mouseover', e => {
+    const t = e.target.closest('[data-cursor]');
+    if (t){
+      const kind = t.dataset.cursor;
+      label.textContent = labelMap[kind] || 'view';
+      document.body.classList.add('is-hover');
+      document.body.classList.toggle('is-drag', kind === 'drag');
+    }
+  });
+  document.addEventListener('mouseout', e => {
+    if (e.target.closest('[data-cursor]')){
+      document.body.classList.remove('is-hover', 'is-drag');
+    }
+  });
+  document.addEventListener('mousedown', () => document.body.classList.add('is-press'));
+  document.addEventListener('mouseup',   () => document.body.classList.remove('is-press'));
+})();
+
+
+/* ---------- WebGL breathing background ---------- */
+(() => {
+  const canvas = document.getElementById('bg-canvas');
+  if (!canvas || typeof THREE === 'undefined') return;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.6));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+
+  const uniforms = {
+    uTime: { value: 0 },
+    uRes:  { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+    uMouse:{ value: new THREE.Vector2(0.5, 0.5) },
+    uScroll:{ value: 0 }
+  };
+
+  const vert = `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position, 1.0); }`;
+  const frag = `
+    precision highp float;
+    varying vec2 vUv;
+    uniform float uTime;
+    uniform vec2 uRes;
+    uniform vec2 uMouse;
+    uniform float uScroll;
+
+    vec3 mod289(vec3 x){ return x - floor(x*(1.0/289.0))*289.0; }
+    vec4 mod289(vec4 x){ return x - floor(x*(1.0/289.0))*289.0; }
+    vec4 permute(vec4 x){ return mod289(((x*34.0)+1.0)*x); }
+    vec4 taylorInvSqrt(vec4 r){ return 1.79284291400159 - 0.85373472095314 * r; }
+    float snoise(vec3 v){
+      const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+      const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+      vec3 i  = floor(v + dot(v, C.yyy));
+      vec3 x0 = v - i + dot(i, C.xxx);
+      vec3 g = step(x0.yzx, x0.xyz);
+      vec3 l = 1.0 - g;
+      vec3 i1 = min(g.xyz, l.zxy);
+      vec3 i2 = max(g.xyz, l.zxy);
+      vec3 x1 = x0 - i1 + C.xxx;
+      vec3 x2 = x0 - i2 + C.yyy;
+      vec3 x3 = x0 - D.yyy;
+      i = mod289(i);
+      vec4 p = permute( permute( permute(
+                 i.z + vec4(0.0, i1.z, i2.z, 1.0))
+               + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+               + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+      float n_ = 0.142857142857;
+      vec3 ns = n_ * D.wyz - D.xzx;
+      vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+      vec4 x_ = floor(j * ns.z);
+      vec4 y_ = floor(j - 7.0 * x_);
+      vec4 x = x_ *ns.x + ns.yyyy;
+      vec4 y = y_ *ns.x + ns.yyyy;
+      vec4 h = 1.0 - abs(x) - abs(y);
+      vec4 b0 = vec4( x.xy, y.xy );
+      vec4 b1 = vec4( x.zw, y.zw );
+      vec4 s0 = floor(b0)*2.0 + 1.0;
+      vec4 s1 = floor(b1)*2.0 + 1.0;
+      vec4 sh = -step(h, vec4(0.0));
+      vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+      vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+      vec3 p0 = vec3(a0.xy, h.x);
+      vec3 p1 = vec3(a0.zw, h.y);
+      vec3 p2 = vec3(a1.xy, h.z);
+      vec3 p3 = vec3(a1.zw, h.w);
+      vec4 norm = taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
+      p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+      vec4 m = max(0.6 - vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)), 0.0);
+      m = m * m;
+      return 42.0 * dot(m*m, vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+    }
+
+    void main(){
+      vec2 uv = vUv;
+      float aspect = uRes.x / uRes.y;
+      vec2 p = vec2((uv.x - 0.5) * aspect, uv.y - 0.5);
+      vec2 m = (uMouse - 0.5) * 0.15;
+      float t = uTime * 0.06 + uScroll * 0.4;
+      float breath = 0.92 + 0.08 * sin(uTime * 0.4);
+
+      float n1 = snoise(vec3(p * 1.4 * breath + m, t)) * 0.5 + 0.5;
+      float n2 = snoise(vec3(p * 2.6 - m, t * 0.7 + 17.0)) * 0.5 + 0.5;
+      float n3 = snoise(vec3(p * 0.7, t * 0.4 + 31.0)) * 0.5 + 0.5;
+
+      vec3 cream = vec3(0.965, 0.957, 0.953);
+      vec3 mint  = vec3(0.745, 0.831, 0.760);
+      vec3 sage  = vec3(0.482, 0.588, 0.478);
+      vec3 brown = vec3(0.420, 0.251, 0.157);
+
+      vec3 col = cream;
+      col = mix(col, mint,  smoothstep(0.40, 0.92, n1) * 0.55);
+      col = mix(col, sage,  smoothstep(0.62, 0.96, n2) * 0.22);
+      col = mix(col, brown, smoothstep(0.74, 1.00, n3) * 0.06);
+
+      float v = smoothstep(1.1, 0.2, length(p));
+      col = mix(cream * 0.95, col, v);
+
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `;
+
+  const geo = new THREE.PlaneGeometry(2,2);
+  const mat = new THREE.ShaderMaterial({ uniforms, vertexShader: vert, fragmentShader: frag });
+  scene.add(new THREE.Mesh(geo, mat));
+
+  function resize(){
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    uniforms.uRes.value.set(window.innerWidth, window.innerHeight);
+  }
+  window.addEventListener('resize', resize);
+
+  window.addEventListener('mousemove', e => {
+    uniforms.uMouse.value.x = e.clientX / window.innerWidth;
+    uniforms.uMouse.value.y = 1.0 - e.clientY / window.innerHeight;
+  });
+  window.addEventListener('scroll', () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    uniforms.uScroll.value = window.scrollY / Math.max(1, max);
+  }, { passive: true });
+
+  const start = performance.now();
+  function tick(){
+    uniforms.uTime.value = (performance.now() - start) / 1000;
+    renderer.render(scene, camera);
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+
+/* ---------- droplets + star polygons drift ---------- */
+(() => {
+  document.querySelectorAll('.droplet').forEach((d, i) => {
+    gsap.to(d, {
+      x: gsap.utils.random(-90, 90),
+      y: gsap.utils.random(-70, 70),
+      scale: gsap.utils.random(.85, 1.15),
+      duration: 18 + i * 4,
+      repeat: -1, yoyo: true, ease: 'sine.inOut',
+      delay: i * .6
+    });
+  });
+
+  document.querySelectorAll('.starshape').forEach((s, i) => {
+    gsap.to(s, {
+      y: gsap.utils.random(-30, 30),
+      x: gsap.utils.random(-20, 20),
+      rotation: gsap.utils.random(-180, 180),
+      duration: 14 + i * 2,
+      repeat: -1, yoyo: true, ease: 'sine.inOut'
+    });
+  });
+})();
+
+
+/* ---------- intro reveal ---------- */
+function runIntro(){
+  // hero title slide-up
+  gsap.to('.hero-title .word > span', {
+    y: 0, duration: 1.1, ease: 'expo.out', stagger: 0.06
+  });
+  gsap.from(['.hero-eyebrow', '.hero-subline'], {
+    y: 20, opacity: 0, duration: 1, ease: 'power3.out',
+    stagger: 0.15, delay: 0.4
+  });
+
+  // hero stickers pop in with stagger
+  gsap.from('.sticker', {
+    y: 40, opacity: 0, scale: 0.92, rotate: '+=8',
+    duration: 1.2, ease: 'power3.out',
+    stagger: { each: 0.08, from: 'random' },
+    delay: 0.6,
+    clearProps: 'opacity,scale'
+  });
+
+  // sticker breathing/idle wiggle
+  gsap.utils.toArray('.sticker').forEach((el, i) => {
+    gsap.to(el, {
+      y: gsap.utils.random(-8, 8),
+      rotation: '+=' + gsap.utils.random(-1.5, 1.5),
+      duration: 4 + Math.random() * 3,
+      repeat: -1, yoyo: true, ease: 'sine.inOut',
+      delay: i * 0.2
+    });
+  });
+
+  // scroll reveals
+  gsap.utils.toArray('.reveal-fade').forEach(el => {
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 85%' }
+    });
+  });
+
+  // marquee loop
+  const track = document.getElementById('marquee');
+  if (track){
+    const w = track.scrollWidth / 2;
+    gsap.to(track, { x: -w, duration: 38, ease: 'none', repeat: -1 });
+  }
+
+  // hero parallax
+  gsap.to('.hero-titlewrap', {
+    yPercent: -10, scale: 0.96,
+    scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
+  });
+
+  // folders staggered reveal
+  gsap.fromTo('.folder-tile',
+    { opacity: 0, y: 40 },
+    {
+      opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.08,
+      scrollTrigger: { trigger: '.folders-grid', start: 'top 80%' }
+    }
+  );
+
+  // about card subtle float
+  gsap.to('.about-card', {
+    y: -10, duration: 4, ease: 'sine.inOut', repeat: -1, yoyo: true
+  });
+}
+
+
+/* ---------- draggable hero stickers + bulletin pins ---------- */
+(() => {
+  if (typeof Draggable === 'undefined') return;
+  document.querySelectorAll('.sticker').forEach(el => {
+    Draggable.create(el, {
+      type: 'x,y',
+      inertia: false,
+      onDragStart(){
+        gsap.killTweensOf(el);
+        gsap.to(el, { rotation: 0, scale: 1.05, zIndex: 50, duration: .25 });
+      },
+      onDragEnd(){
+        gsap.to(el, { scale: 1, duration: .3, ease: 'power3.out' });
+      }
+    });
+  });
+  document.querySelectorAll('.pin-item').forEach(el => {
+    Draggable.create(el, {
+      type: 'x,y',
+      bounds: '#boardCork',
+      onDragStart(){ gsap.to(el, { scale: 1.06, duration: .25, zIndex: 50 }); },
+      onDragEnd(){ gsap.to(el, { scale: 1, duration: .3 }); }
+    });
+  });
+})();
+
+
+/* ---------- finder filters ---------- */
+(() => {
+  const tags = document.querySelectorAll('.finder-side .item[data-filter]');
+  const items = document.querySelectorAll('.folder-tile');
+  let active = null;
+  tags.forEach(t => {
+    t.addEventListener('click', () => {
+      const f = t.dataset.filter;
+      // toggle off if same one clicked
+      if (active === f){
+        tags.forEach(x => x.classList.remove('is-active'));
+        items.forEach(it => {
+          gsap.to(it, { opacity: 1, scale: 1, duration: .4, ease: 'power3.out' });
+          it.style.pointerEvents = 'auto';
+        });
+        active = null;
+        return;
+      }
+      tags.forEach(x => x.classList.remove('is-active'));
+      t.classList.add('is-active');
+      active = f;
+      items.forEach(it => {
+        const show = it.dataset.cat === f;
+        gsap.to(it, {
+          opacity: show ? 1 : 0.18,
+          scale: show ? 1 : 0.98,
+          duration: 0.5, ease: 'power3.out'
+        });
+        it.style.pointerEvents = show ? 'auto' : 'none';
+      });
+    });
+  });
+})();
+
+
+/* ---------- project window content ---------- */
+const PROJECTS = {
+  mirchi: {
+    title: 'Mirchi',
+    accent: '#BED4C2',
+    dark: false,
+    tagline: 'Menu redesign and brand refresh for an Indian restaurant in Ngunnawal, Canberra. The kind of brief that started over a plate of dosa.',
+    meta: [
+      ['Client', 'Mirchi · Ngunnawal, Canberra'],
+      ['Scope', 'Menu, identity, illustration'],
+      ['Tools', 'InDesign, Photoshop, Illustrator'],
+      ['Status', 'Commissioned · 2024']
+    ],
+    sections: [
+      { kind: 'two', label: 'Context',
+        head: 'A small restaurant doing big food, asked for a menu that finally matched.',
+        body: `<p>I'd been in for dinner a few times before I finally said anything. The food at Mirchi punches well above its weight, but the printed menu didn't quite get it. Crowded type, faded photographs, no real visual point of view. I asked the owner if I could pitch a redesign, and he said yes before I'd even finished sketching it on a napkin.</p>
+        <p>The brief, when we finally wrote one, was simple. Make it feel as warm as the room. Make the dishes legible. Don't lose the regulars.</p>`,
+        figures: [['ph cream','Original menu'],['ph','Redesign cover']] },
+      { kind: 'image', label: 'Identity',
+        head: 'A small wordmark. A few warm tones. A motif that earns its place.',
+        body: `<p>The new identity sits on three things. A custom wordmark with a slightly hand-drawn feel, the deep ink and bark tones lifted from a roasted spice palette, and a recurring star polygon motif used quietly across the menu and the takeaway packaging.</p>`,
+        figures: [['ph dark','Wordmark study'],['ph sage','Spice swatches'],['ph','Star motif on cover'],['ph cream','Takeaway sleeve']] },
+      { kind: 'two', label: 'Outcome',
+        head: 'Bigger ticket size, fewer questions at the counter, regulars stayed.',
+        body: `<p>The menu went from a single double-sided A3 to a stitched booklet with sections that actually breathe. The owner reported a noticeable lift in the higher-margin shareable plates, which I'd put down to giving them their own spread rather than burying them in the middle column. We also added clear vegetarian and gluten-free icons, which apparently saved staff a lot of repeat conversations.</p>`,
+        figures: [['ph','Section spread'],['ph cream','Detail']] }
+    ]
+  },
+
+  sund: {
+    title: 'Sun & D',
+    accent: '#F0D9B8',
+    dark: false,
+    tagline: 'A mobile app prototype helping South Asian adults in Queensland balance sun protection with Vitamin D needs. Designed for a private clinic. Two months end to end.',
+    meta: [
+      ['Client', 'Confidential · QLD clinic'],
+      ['Scope', 'Research, IA, prototype, multilingual'],
+      ['Tools', 'Figma, Mockflow, Illustrator'],
+      ['Status', 'Freelance · NDA · 2 months']
+    ],
+    sections: [
+      { kind: 'two', label: 'Brief',
+        head: 'Health communication built around skin tones, accents, and assumptions that quietly leave a lot of people out.',
+        body: `<p>The clinic had been seeing a particular pattern in their South Asian patients. High Vitamin D deficiency on one hand, careful sun avoidance on the other, and almost no health material that addressed either thing in a culturally aware way. They wanted a prototype that could sit alongside their existing service, not replace it.</p>
+        <p>I spent the first three weeks not designing. Just reading, interviewing, and pulling together what existed already. The frameworks I leaned on most were COM-B and the Health Belief Model, mostly because they made the gap between "knows what to do" and "actually does it" feel less mysterious.</p>`,
+        figures: [['ph','Research synthesis'],['ph sage','Persona map']] },
+      { kind: 'image', label: 'Brand and tone',
+        head: 'Diversity is the premise, not the footnote.',
+        body: `<p>Warm earthy tones drawn from South Asian skin and landscape, multilingual content, culturally aware guidance, and brown skin imagery throughout. The visual language tries hard to feel like a friend texting you a reminder rather than a poster on a clinic wall.</p>`,
+        figures: [['ph','UV dashboard'],['ph cream','Vitamin D tracker'],['ph sage','Routine builder'],['ph dark','Skin check guide']] },
+      { kind: 'two', label: 'Structure',
+        head: 'Ten sections, six languages, one quiet spine running through all of it.',
+        body: `<p>The app sits on ten sections. UV dashboard, Vitamin D tracker, routine builder, skin check guide, community stories, multilingual support, and a few smaller utilities for medication and reminders. Hindi, Tamil, Punjabi, Urdu, Bengali, and Malayalam are all supported, with the layout grids tested in each.</p>
+        <ul class="bullets">
+          <li>Phased onboarding to avoid asking too much, too fast.</li>
+          <li>Context-aware nudges instead of a generic daily push.</li>
+          <li>Privacy held tight, in line with a clinical client and the cultural sensitivity around the topic.</li>
+          <li>Community stories section co-written with patients, anonymised.</li>
+        </ul>`,
+        figures: [['ph dark','Onboarding'],['ph','Notification design']] },
+      { kind: 'two', label: 'What I learnt',
+        head: 'Research before design, every time, even when the deadline is tight.',
+        body: `<p>Sun &amp; D is the clearest example of user-centred design I've worked on so far. Designing within real constraints, things like cultural sensitivity, clinical credibility, multilingual accessibility, and patient privacy, made the visual decisions easier rather than harder. The constraints did most of the heavy lifting. I just had to listen for them.</p>`,
+        figures: [['ph cream','Type system'],['ph sage','Multilingual specimen']] }
+    ]
+  },
+
+  nestify: {
+    title: 'Nestify',
+    accent: '#BED4C2',
+    dark: false,
+    tagline: 'A smart home management app prototype, built around the idea that your house shouldn\'t make you feel stupid.',
+    meta: [
+      ['Type', 'UX / UI · Concept'],
+      ['Scope', 'IA, flows, hi-fi prototype'],
+      ['Tools', 'Figma'],
+      ['Status', 'University project']
+    ],
+    sections: [
+      { kind: 'two', label: 'Premise',
+        head: 'Most smart home apps are built for the person who installed them, not the person who lives there.',
+        body: `<p>I started Nestify after watching my parents try to dim a light using an app that needed three taps and a perfect Wi-Fi connection. The friction wasn't the technology, it was the language and the layout. The whole concept of Nestify is to flip the priority. People first. Devices second. Settings third, if at all.</p>`,
+        figures: [['ph','Home dashboard'],['ph sage','Room view']] },
+      { kind: 'image', label: 'Patterns',
+        head: 'Big targets, soft edges, and as few words as possible.',
+        body: `<p>The control patterns are intentionally chunky. Tappable areas are large, the hierarchy is built around current state rather than action, and routines are written like sentences rather than configured like rules. The whole thing leans on the same warm palette as the rest of my work, with mint and sage doing most of the active-state lifting.</p>`,
+        figures: [['ph','Lighting'],['ph cream','Routines'],['ph sage','Climate'],['ph','Devices']] }
+    ]
+  },
+
+  travel: {
+    title: 'Wander Notes',
+    accent: '#6B4028',
+    dark: true,
+    tagline: 'A personal travel blog, built from the studs up in plain HTML, CSS and JavaScript. Half journal, half learning project.',
+    meta: [
+      ['Type', 'Personal site'],
+      ['Scope', 'Front-end, copy, photography'],
+      ['Tools', 'HTML, CSS, JavaScript'],
+      ['Status', 'Live, ongoing']
+    ],
+    sections: [
+      { kind: 'two', label: 'Why',
+        head: 'I wanted somewhere to put trip photos that wasn\'t Instagram, and I wanted to write more JavaScript.',
+        body: `<p>Most of the design choices on the site are deliberately a little old-fashioned. Big typography, slow scrolling, generous margins. I wanted it to feel like a magazine you'd actually finish, rather than a feed you'd thumb past.</p>
+        <p>Underneath, it's an excuse to practise things like custom cursors, scroll-driven reveals, and clean responsive grids without leaning on a framework.</p>`,
+        figures: [['ph dark','Issue cover'],['ph','Story spread']] },
+      { kind: 'image', label: 'Notes from the build',
+        head: 'No build tools. No frameworks. Just files.',
+        body: `<p>The whole thing is hand-coded and version-controlled. Images are optimised by hand. I refused to install npm, and so far I've only had to walk that decision back twice.</p>`,
+        figures: [['ph','Hong Kong'],['ph dark','Tokyo'],['ph sage','Sri Lanka'],['ph cream','Lisbon']] }
+    ]
+  },
+
+  newlyf: {
+    title: 'New Lyf, Manly West',
+    accent: '#EFE6DC',
+    dark: false,
+    tagline: 'A website for a retirement and over-50s living community in Manly West. Calm, slow scrolling, big readable type.',
+    meta: [
+      ['Client', 'New Lyf, Manly West'],
+      ['Scope', 'Site design and build'],
+      ['Tools', 'HTML, CSS, JavaScript'],
+      ['Status', 'Commissioned, live']
+    ],
+    sections: [
+      { kind: 'two', label: 'Brief',
+        head: 'A site that doesn\'t shout, doesn\'t patronise, and works on a five-year-old iPad.',
+        body: `<p>The brief came with a strong, helpful constraint. The audience is older, the device range is wider than usual, and people make decisions slowly. The site needed to sit in that. So most of the choices were about restraint. Bigger body type than I'd usually set, fewer interactive flourishes, longer-form copy that reads like a brochure rather than a landing page.</p>`,
+        figures: [['ph cream','Homepage'],['ph','Floor plans']] },
+      { kind: 'image', label: 'Patterns',
+        head: 'Slow over snappy. Warm over crisp.',
+        body: `<p>The hover states are gentle. The scrolling is unhurried. There's a "request a tour" path that doesn't bury the form behind a popup. Almost everything was tested in person on the screens the audience actually uses.</p>`,
+        figures: [['ph cream','Lifestyle'],['ph','About us'],['ph sage','Garden plans'],['ph cream','FAQ']] }
+    ]
+  },
+
+  winnlane: {
+    title: 'Winn Lane Cabinet',
+    accent: '#340B01',
+    dark: true,
+    tagline: 'Three p5.js mini-games for the Louie Play Cabinet on Winn Lane, Fortitude Valley. A 4-way joystick, three arcade buttons, and three of the lane\'s real shopfronts as levels.',
+    meta: [
+      ['Type', 'Interactive installation'],
+      ['Scope', 'Concept, art, code, level design'],
+      ['Tools', 'p5.js, Illustrator'],
+      ['Status', 'Installed in cabinet']
+    ],
+    sections: [
+      { kind: 'two', label: 'The cabinet',
+        head: 'A real arcade cabinet. Real joystick. Real buttons. People actually walk up and play it.',
+        body: `<p>The Louie Play Cabinet sits on Winn Lane in Fortitude Valley, a small laneway in Brisbane lined with independent food and drink. The brief was to design something for the cabinet that felt like it belonged on the lane, not just on a screen.</p>
+        <p>I built three mini-games, each one tied to a real shopfront on the lane. Ben's Burgers, No. 5 Cafe, and Quivr Bar. The whole thing is sketched in Illustrator and runs in p5.js, with the cabinet's joystick mapped to arrow keys and the three buttons mapped to keys on a keyboard sitting inside the cabinet.</p>`,
+        figures: [['ph dark','Cabinet front'],['ph','Game select']] },
+      { kind: 'image', label: 'The three games',
+        head: 'Burger stacking, latte art, drink-pouring panic.',
+        body: `<p>Each game is short, looped, and unforgiving in a friendly way. They're designed to be readable in maybe four seconds, played for forty, and laughed at for the rest of your walk down the lane.</p>`,
+        figures: [['ph dark','Ben\'s Burgers'],['ph','No. 5 Cafe'],['ph sage','Quivr Bar'],['ph cream','Game over']] },
+      { kind: 'two', label: 'Building for the body, not the browser',
+        head: 'You design differently when there are people standing behind the player.',
+        body: `<p>The single biggest lesson, by a long way, is that designing for a public arcade cabinet has almost nothing to do with designing for a browser. People walk up mid-round. They rarely read instructions. They will absolutely smash the buttons. Every visual decision had to survive a stranger pressing every input at once.</p>`,
+        figures: [['ph','Joystick close-up'],['ph dark','Lane at night']] }
+    ]
+  }
+};
+
+
+(() => {
+  const win = document.getElementById('projWindow');
+  const scrim = document.getElementById('winScrim');
+  const body = document.getElementById('winBody');
+  const titleEl = document.getElementById('winTitle');
+
+  function buildProject(p){
+    const heroClass = p.dark ? 'proj-hero is-dark' : 'proj-hero';
+    const meta = p.meta.map(m => `<div><span>${m[0]}</span>${m[1]}</div>`).join('');
+
+    let sectionsHtml = '';
+    p.sections.forEach(s => {
+      if (s.kind === 'two'){
+        sectionsHtml += `
+          <section class="proj-section">
+            <div class="two-col">
+              <div>
+                <div class="label">${s.label}</div>
+                <h3>${s.head}</h3>
+                ${s.body}
+              </div>
+              <div>
+                ${s.figures.map(f => `<div class="${f[0]}" style="margin-bottom:16px; aspect-ratio:4/3; display:grid; place-items:center; border-radius:8px;">${f[1]}</div>`).join('')}
+              </div>
+            </div>
+          </section>
+        `;
+      } else if (s.kind === 'image'){
+        sectionsHtml += `
+          <section class="proj-section">
+            <div class="label">${s.label}</div>
+            <h3>${s.head}</h3>
+            ${s.body}
+            <div class="proj-figure-grid">
+              ${s.figures.map(f => `<div class="${f[0]}">${f[1]}</div>`).join('')}
+            </div>
+          </section>
+        `;
+      }
+    });
+
+    return `
+      <article class="proj">
+        <header class="${heroClass}" style="--proj-accent:${p.accent}">
+          <div class="proj-eyebrow">${p.title} · case study</div>
+          <h2 class="proj-title">${p.title}</h2>
+          <p class="proj-tagline">${p.tagline}</p>
+          <div class="proj-meta-grid">${meta}</div>
+        </header>
+        ${sectionsHtml}
+        <section class="proj-section" style="border-bottom:0;">
+          <div class="label">next</div>
+          <h3>Want to talk about a similar brief?</h3>
+          <p>I'm picking up new commissions through 2026, with a soft preference for community-led, multilingual, or print-meets-digital work.</p>
+          <div class="cta-row">
+            <a class="btn primary" href="mailto:amritha2825@gmail.com" data-cursor="hover">Email me</a>
+            <a class="btn" href="https://www.behance.net/amrithaanil1" target="_blank" rel="noopener" data-cursor="hover">More on Behance</a>
+          </div>
+        </section>
+      </article>
+    `;
+  }
+
+  function open(key){
+    const p = PROJECTS[key];
+    if (!p) return;
+    titleEl.textContent = p.title.toLowerCase();
+    body.innerHTML = buildProject(p);
+    body.scrollTop = 0;
+    scrim.classList.add('is-open');
+    win.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+
+    gsap.fromTo('#projWindow .proj-title',
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', delay: .1 });
+    gsap.fromTo('#projWindow .proj-tagline, #projWindow .proj-meta-grid',
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', stagger: 0.08, delay: .25 });
+
+    gsap.utils.toArray('#projWindow .proj-section').forEach(sec => {
+      gsap.fromTo(sec,
+        { y: 40, opacity: 0 },
+        {
+          y: 0, opacity: 1, duration: 0.9, ease: 'power3.out',
+          scrollTrigger: { trigger: sec, scroller: '#winBody', start: 'top 90%' }
+        });
+    });
+  }
+
+  function close(){
+    scrim.classList.remove('is-open');
+    win.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.folder-tile').forEach(f => {
+    f.addEventListener('click', () => open(f.dataset.project));
+  });
+  scrim.addEventListener('click', close);
+  document.getElementById('winClose').addEventListener('click', close);
+  document.getElementById('winCloseText').addEventListener('click', close);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && win.classList.contains('is-open')) close();
+  });
+})();
+
+
+/* ---------- smooth anchor scroll ---------- */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if (id === '#') return;
+    const t = document.querySelector(id);
+    if (t){
+      e.preventDefault();
+      window.scrollTo({ top: t.offsetTop - 30, behavior: 'smooth' });
+    }
+  });
+});
+</script>
+</body>
+</html>
