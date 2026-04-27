@@ -272,11 +272,14 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 /* Floating decorative star polygons */
 .starshape{
   position: absolute;
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
   z-index: 1;
   opacity: .55;
   will-change: transform;
+  transition: transform 0.4s cubic-bezier(.34,1.56,.64,1), opacity 0.3s;
 }
+.starshape:hover{ opacity: .9; transform: scale(1.3) rotate(180deg); }
 .starshape svg{ width: 100%; height: 100%; }
 
 /* === Hero stickers (the scattered objects) === */
@@ -769,14 +772,14 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 }
 
 /* --- Position presets --- */
-.s-lanyard{ top: 30px;  left: 40px; }
-.s-ticket { top: 0;     right: 50px; transform: rotate(5deg); }
-.s-vinyl  { top: 320px; left: 20px;  transform: rotate(-6deg); }
-.s-folder { bottom: 20px; left: 22%; transform: rotate(-4deg); }
-.s-paper  { top: 38%;  left: 50%;  transform: translateX(-50%) rotate(-2deg); display: none; }
-.s-collage{ top: 290px; right: 40px; transform: rotate(4deg); }
-.s-terminal{ bottom: 30px; right: 40px; transform: rotate(-2deg); }
-.s-stamp  { bottom: 230px; right: 30%; transform: rotate(11deg); }
+.s-lanyard{ top: 20px;  left: 30px; }
+.s-ticket { top: -10px; right: 60px; transform: rotate(6deg); }
+.s-vinyl  { top: 310px; left: 10px;  transform: rotate(-5deg); }
+.s-folder { bottom: 40px; left: 18%; transform: rotate(-3deg); }
+.s-paper  { top: 36%;  left: 44%;  transform: translateX(-50%) rotate(-1deg); }
+.s-collage{ top: 260px; right: 30px; transform: rotate(3deg); }
+.s-terminal{ bottom: 20px; right: 30px; transform: rotate(-2deg); }
+.s-stamp  { top: 10px; left: 38%; transform: rotate(9deg); }
 
 @media (max-width: 980px){
   .hero-stage{ min-height: 1100px; }
@@ -787,6 +790,12 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   .s-collage{ top: 1100px; left: 50%; transform: translateX(-50%) rotate(2deg); }
   .s-terminal{ display: none; }
   .s-stamp  { display: none; }
+  .s-paper  { display: none; }
+}
+@media (max-width: 540px){
+  .s-collage{ display: none; }
+  .s-ticket { display: none; }
+  .s-lanyard{ transform: scale(0.82); transform-origin: top left; }
 }
 
 /* ============ Marquee strip ============ */
@@ -972,7 +981,7 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   cursor: none;
   transition: transform .35s var(--ease-pop);
 }
-.folder-tile:hover{ transform: translateY(-6px); }
+.folder-tile:hover{ transform: translateY(-8px) scale(1.01); }
 
 .folder-icon{
   position: relative;
@@ -1230,15 +1239,6 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   max-width: 80%;
 }
 .proj-figure-grid .proj-fig{ margin-bottom: 0; }
-/* hero banner images in project windows */
-.proj-hero-img{
-  width: 100%; max-height: 420px;
-  object-fit: cover;
-  display: block;
-  margin-top: 30px;
-  border-radius: var(--r);
-  box-shadow: var(--shadow-pop);
-}
 
 .cta-row{ display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
 .cta-row .btn{
@@ -1250,9 +1250,19 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   font-family: var(--font-mono);
   letter-spacing: .14em; text-transform: uppercase;
   transition: all .3s var(--ease-soft);
+  position: relative; overflow: hidden;
 }
 .cta-row .btn.primary{ background: var(--c-ink); color: var(--c-cream); }
-.cta-row .btn:hover{ transform: translateY(-2px); }
+.cta-row .btn:hover{ transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+.cta-row .btn.discover-btn{
+  padding: 14px 26px;
+  font-size: 14px;
+  letter-spacing: .16em;
+  background: var(--c-ink);
+  color: var(--c-cream);
+  border-color: var(--c-ink);
+}
+.cta-row .btn.discover-btn:hover{ background: var(--c-bark); border-color: var(--c-bark); transform: translateY(-3px); }
 
 /* ============ Bulletin board (playground) ============ */
 #playground{
@@ -1480,6 +1490,52 @@ footer{
 footer .wrap{
   display: flex; justify-content: space-between;
   flex-wrap: wrap; gap: 16px;
+}
+
+/* ============ About photo layout ============ */
+.about-photo-row{
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 60px;
+  align-items: start;
+  margin-top: 24px;
+}
+.about-photo-wrap{
+  position: sticky;
+  top: 120px;
+}
+.about-photo{
+  width: 100%;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-pop);
+  object-fit: cover;
+  aspect-ratio: 3/4;
+  display: block;
+}
+.about-statement .intro-label{ margin-bottom: 16px; }
+.about-statement .about-headline{ margin: 0 0 20px; }
+.about-statement .about-body{ font-size: 16px; line-height: 1.78; }
+.about-statement .about-body p{ margin: 0 0 1em; }
+.about-skills-row{
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 60px;
+  margin-top: 60px;
+  align-items: start;
+}
+.about-skills-filler{ font-size: 17px; line-height: 1.75; }
+.about-skills-filler p + p{ margin-top: 1em; }
+@media (max-width: 860px){
+  .about-photo-row{ grid-template-columns: 1fr; }
+  .about-photo-wrap{ position: static; }
+  .about-photo{ aspect-ratio: 4/3; max-height: 360px; object-position: top; }
+  .about-skills-row{ grid-template-columns: 1fr; gap: 40px; }
+}
+@media (max-width: 760px){
+  .project-window{ min-width: unset !important; width: 100vw !important; min-height: 100dvh !important; border-radius: 0 !important; }
+}
+@media (min-width: 1600px){
+  .hero-stage{ min-height: 860px; }
 }
 
 /* ============ Reveal helpers ============ */
@@ -1733,7 +1789,7 @@ footer .wrap{
 
 
     <!-- 5. Ripped paper note (hidden by default but kept for tablet) -->
-    <div class="sticker s-paper" id="stickPaper">
+    <div class="sticker s-paper" id="stickPaper" data-cursor="drag">
       <div class="rippedpaper">
         <div class="tape"></div>
         <div class="paper">
@@ -1777,7 +1833,7 @@ footer .wrap{
       <div class="terminal">
         <div class="terminal-bar">
           <div class="dots"><i></i><i></i><i></i></div>
-          <div class="title">amritha — zsh</div>
+          <div class="title">amritha · zsh</div>
           <div style="width: 40px;"></div>
         </div>
         <div class="terminal-body">
@@ -2016,8 +2072,8 @@ footer .wrap{
                 </div>
               </div>
               <div class="folder-meta"><span>04 · personal</span><span>web</span></div>
-              <h3 class="folder-name">Wander Notes</h3>
-              <p class="folder-line">A handcoded travel blog. Half journal, half excuse to write more JavaScript.</p>
+              <h3 class="folder-name">Travel Blog</h3>
+              <p class="folder-line">Wanderlust by Amritha. A handcoded travel blog built from scratch in HTML, CSS and JavaScript.</p>
               <span class="folder-status"><i></i> Live</span>
             </article>
 
@@ -2072,7 +2128,7 @@ footer .wrap{
                 </div>
               </div>
               <div class="folder-meta"><span>06 · brisbane</span><span>interactive</span></div>
-              <h3 class="folder-name">Winn Lane Cabinet</h3>
+              <h3 class="folder-name">Winn Lane</h3>
               <p class="folder-line">Three p5.js mini-games living in an arcade cabinet on Winn Lane, Fortitude Valley.</p>
               <span class="folder-status"><i></i> Installed</span>
             </article>
@@ -2204,15 +2260,29 @@ footer .wrap{
 <!-- ============================ ABOUT ============================ -->
 <section id="about">
   <div class="wrap">
-    <div class="intro-label reveal-fade">02 · about</div>
-    <div class="about-grid" style="margin-top: 24px;">
-      <div>
-        <h2 class="about-headline reveal-fade">Designing well, for me, mostly looks like <em>asking better questions</em> earlier than people expect.</h2>
+
+    <div class="about-photo-row">
+      <div class="about-photo-wrap reveal-fade">
+        <img src="uploads/me.png" alt="Amritha Anil" class="about-photo">
+      </div>
+      <div class="about-statement">
+        <div class="intro-label reveal-fade">02 · about</div>
+        <h2 class="about-headline reveal-fade">Growing up South Asian in Australia, I developed an early appreciation for the beauty of <em>cultural nuance</em>.</h2>
         <div class="about-body reveal-fade">
-          <p>My background sits at the intersection of marketing and interactive design. I worry about the funnel and the kerning in the same afternoon, and I find I do better work when I refuse to pick a lane.</p>
-          <p>Most of my work circles a single idea, which is that designing for someone is not the same as designing about them. The Sun &amp; D project, in particular, taught me how often health and lifestyle communication is built around skin tones, accents, and assumptions that quietly leave a lot of people out.</p>
-          <p>I work with restaurants, clinics, retirement communities, and the occasional games cabinet. I'd happily work with you too.</p>
+          <p>Frequent travels to India and abroad transformed this appreciation into a lifelong curiosity about how identity is expressed and maintained. I went from designing Western Fusion outfits and experimenting with international flavours in the kitchen to designing strategically for inclusivity, especially for the underrepresented communities.</p>
+          <p>My experience in Marketing and Interactive Design allows me to approach problems from multiple perspectives, bridging the gap between business strategy and human-centric design. Being bilingual has given me the unique ability to navigate diverse communities and advocate for those often labelled as 'difficult' or 'misrepresented' in traditional design frameworks.</p>
+          <p>I am dedicated in creating user-centered design thinking to prototype solutions that resonate across different demographics.</p>
+          <p>My passion for Marketing and social media has taught me that connection is a universal human need. I strive to build platforms where everyone feels seen, designing for the marginalised voices.</p>
+          <p>When creating digital spaces in Figma my goal is to ensure digital environments are as diverse, nuanced, and accessible as the people who inhabit them. I design for the misunderstood, striving to build a more inclusive future one user experience at a time.</p>
+          <p>By merging my cultural insights with design methodology, I transform the complexities of human identity into intuitive digital experiences that drive both social progress and user resonance.</p>
         </div>
+      </div>
+    </div>
+
+    <div class="about-skills-row" style="margin-top: 60px;">
+      <div class="about-skills-filler reveal-fade">
+        <p>I work with restaurants, clinics, retirement communities, and the occasional games cabinet. My background in marketing means I think about the message and the kerning in the same afternoon.</p>
+        <p>The work here spans print, UX, web and interactive design. Each brief is different. The approach is always the same: understand the people first, then design.</p>
       </div>
       <aside class="about-card reveal-fade">
         <h4>Specialisms</h4>
@@ -2234,6 +2304,7 @@ footer .wrap{
         <div class="row"><span>Brisbane, QLD</span><span>Australia</span></div>
       </aside>
     </div>
+
   </div>
 </section>
 
@@ -2617,6 +2688,25 @@ function runIntro(){
   gsap.to('.about-card', {
     y: -10, duration: 4, ease: 'sine.inOut', repeat: -1, yoyo: true
   });
+
+  // bulletin board staggered reveal
+  gsap.fromTo('.pin-item',
+    { opacity: 0, y: 30, scale: 0.94 },
+    {
+      opacity: 1, y: 0, scale: 1,
+      duration: 0.7, ease: 'back.out(1.5)',
+      stagger: { each: 0.07, from: 'random' },
+      scrollTrigger: { trigger: '#boardCork', start: 'top 80%' }
+    }
+  );
+
+  // about photo fade in
+  gsap.fromTo('.about-photo',
+    { opacity: 0, scale: 0.97, y: 20 },
+    { opacity: 1, scale: 1, y: 0, duration: 1.1, ease: 'power3.out',
+      scrollTrigger: { trigger: '.about-photo-row', start: 'top 80%' }
+    }
+  );
 }
 
 
@@ -2740,47 +2830,38 @@ const PROJECTS = {
     title: 'Mirchi',
     accent: '#E8B07A',
     dark: false,
-    heroImg: 'imgs/mirchi-hero.png',
-    tagline: 'Menu redesign and brand refresh for Mirchi Indian Cuisine, Canberra — a restaurant whose menu hadn\'t changed since 2014.',
+    tagline: 'A freelance print project for a well-known Indian restaurant in Canberra, 3 to 4 weeks. The menu had not been updated since 2014.',
+    discover: { label: 'Download Menu', href: 'uploads/Mirchi Final Design.pdf', download: true },
     meta: [
       ['Client', 'Mirchi Indian Cuisine · Canberra'],
       ['Scope', 'Menu design · Brand refresh · Print'],
       ['Tools', 'InDesign · Photoshop · Illustrator'],
-      ['Timeline', '3–4 weeks · Commission']
+      ['Timeline', '3 to 4 weeks · Commission']
     ],
     sections: [
       { kind: 'two', label: '01 · Overview',
-        head: 'A menu that hadn\'t changed since 2014, for a restaurant that deserved better.',
-        body: `<p>Mirchi's previous menu lacked creativity and direction. The red, green, black and white colour palette from 2014 had no cohesive brand identity — high-contrast colours competed for the reader's attention rather than guiding it. The simple brochure-style layout didn't create a welcoming mood, and the near-total absence of imagery forced customers to rely solely on text descriptions.</p>
-        <p>After discussing the brief with the client, three things were non-negotiable: the name and clear description of each dish, appropriate imagery, and a consistent background that didn't overpower the food.</p>`,
+        head: 'A menu frozen in 2014, for a restaurant that deserved better.',
+        body: `<p>Mirchi's menu has not been updated since 2014, when the restaurant first opened in Canberra. This freelance project involved working with a well-known Indian-cuisine restaurant in Canberra for the time frame of 3 to 4 weeks. Mirchi's previous menu lacked creativity and direction.</p>
+        <p>After discussing the design with the client, it was understood that the final design must include the name and clear description of the dishes, appropriate imagery and a consistent background that did not overpower the dishes.</p>
+        <p>The final design was created on Adobe InDesign, with imagery from Envato Elements. These images were made into elements and edited using Adobe Photoshop. Adobe Illustrator was used for the final graphics and vector touch up.</p>
+        <p>This project taught me the value of a seamless multi-software workflow, demonstrating how the integration of Photoshop, Illustrator and InDesign is essential for maintaining a high-quality final design. I learnt how to balance creative vision with client expectations, translating abstract feedback into a functional visual design.</p>`,
         figs: [
           { label: 'Hero spread', img: 'imgs/mirchi-hero.png' },
           { label: 'Menu title', img: 'imgs/mirchi-title.png' }
         ]
       },
-      { kind: 'image', label: '02 · Redesign',
-        head: 'Brown, white, and red — drawn from Indian spices and cultural cutlery.',
-        body: `<p>The new menu design incorporates a brown, white and red palette inspired by Indian spices and cultural cutlery, creating an immediate homey and authentic atmosphere. High-quality imagery of actual dishes allows customers to visualise what they're ordering — proven to increase appetite and average spend.</p>
-        <p>The layout was reimagined as a flat laminated design. This project taught me the value of a seamless multi-software workflow: Photoshop for imagery, Illustrator for vector touch-up, and InDesign for layout and final output.</p>`,
+      { kind: 'two', label: '02 · Original Menu',
+        head: 'What came before.',
+        body: `<p>The previous red, green, black and white colour palette lacked a cohesive brand identity and appeared uninspired. The high-contrast colours competed for reader attention rather than guiding it. The simple brochure style layout was not durable for the restaurant environment as it did not create a welcoming mood but rather an ordinary take-out restaurant feel. The lack of imagery in the menu also forced customers to rely on text descriptions.</p>`,
         figs: [
-          { label: 'Hero spread', img: 'imgs/mirchi-hero.png' },
-          { label: 'Title page', img: 'imgs/mirchi-title.png' },
-          { label: 'Menu spread', accent: '#E8B07A' },
-          { label: 'Laminated final', accent: '#F0D9B8' }
+          { label: 'Original menu', img: 'imgs/mirchi-hero.png' }
         ]
       },
-      { kind: 'two', label: '03 · Outcome',
-        head: 'Warm, legible, authentic — and finally, as good as the food.',
-        body: `<p>The redesigned menu balances creative vision with client expectations. Sections now breathe. Dishes have room to speak. The imagery communicates warmth rather than just information.</p>
-        <ul class="bullets">
-          <li>Full colour system derived from Indian spice palette.</li>
-          <li>Imagery sourced and edited from Envato Elements via Photoshop.</li>
-          <li>Vector graphics and final touch-up completed in Illustrator.</li>
-          <li>Print-ready InDesign file delivered for flat laminated production.</li>
-        </ul>`,
+      { kind: 'two', label: '03 · Redesigned Menu',
+        head: 'Brown, white and red, drawn from Indian spices and cultural cutlery.',
+        body: `<p>The new menu design incorporates a brown, white and red palette inspired by Indian spices and cultural cutlery, creating an immediate homey and authentic atmosphere. The menu features high-quality imagery of actual dishes, allowing customers to visualise the dish, proven to increase customer appetite and average spend. The layout was reimagined to a flat laminated design.</p>`,
         figs: [
-          { label: 'Hero', img: 'imgs/mirchi-hero.png' },
-          { label: 'Title', img: 'imgs/mirchi-title.png' }
+          { label: 'Redesigned menu', img: 'imgs/mirchi-title.png' }
         ]
       }
     ]
@@ -2790,46 +2871,32 @@ const PROJECTS = {
     title: 'Sun & D',
     accent: '#F0D9B8',
     dark: false,
-    heroImg: 'imgs/sund-hero.png',
-    tagline: 'A multilingual mobile app helping South Asian Australians balance sun safety with Vitamin D — designed for a QLD health clinic over two months.',
+    tagline: 'Smart Sun Habits for Healthy Vitamin D. A Figma prototype designed for the South Asian community in Australia over approximately 2 months.',
+    discover: { label: 'View Prototype', href: 'https://www.figma.com/proto/HLO2wb4L5kIwFjax5Lya1P/Sun---D-QLD-n11539151?node-id=8021-4&starting-point-node-id=8021%3A4&t=yZhPzlhB2KBQ7fx4-1', download: false },
     meta: [
-      ['Client', 'QLD Health Clinic · Confidential'],
+      ['Client', 'QLD Health · Community project'],
       ['Scope', 'UX Design · Research · Prototype · Multilingual'],
       ['Tools', 'Figma · Mockflow · Illustrator'],
-      ['Timeline', '2 months · Freelance · NDA']
+      ['Timeline', '2 months · Individual project']
     ],
     sections: [
-      { kind: 'two', label: '01 · The problem',
-        head: 'Health communication built around assumptions that quietly leave people out.',
-        body: `<p>The South Asian community in Australia often struggles with incorrect representation of darker skin in educational materials about sun safety. For people of colour, melanoma incidences are lower, but diagnosis can be late — often due to uncertainty within the community. Similarly, studies about Vitamin D frequently fail to accommodate those of South Asian descent.</p>
-        <p>The clinic identified a pattern: high Vitamin D deficiency alongside careful sun avoidance, with almost no culturally aware material to bridge the gap. They wanted a prototype that could sit alongside their existing service.</p>`,
+      { kind: 'two', label: '01 · The Brief',
+        head: 'Smart Sun Habits for Healthy Vitamin D.',
+        body: `<p>The South Asian community in Australia often struggles with incorrect representation of darker skin in educational materials about sun safety. For people of colour, melanoma incidences are much lower, but diagnosis can be late often due to uncertainty among the community. Much like sun safety, the studies about vitamin D, often do not accommodate for those of South Asian descent or darker skinned individuals in general.</p>
+        <p>The project duration was approximately 2 months, where I individually designed the Figma prototype Sun and D. The design process involved primary research of the South Asian community, to find the key issues the audience currently faces. These issues were addressed in the final concept.</p>
+        <p>Research showed a language barrier between medical professionals and South Asians; hence the Sun and D app is available in a range of languages including but not limited to English, Malayalam, Tamil and Hindi. The app provides a quick checklist for users, taking into consideration clothing preferences of the community.</p>`,
         figs: [
           { label: 'App overview', img: 'imgs/sund-hero.png' },
           { label: 'Screen detail', img: 'imgs/sund1.png' }
         ]
       },
-      { kind: 'image', label: '02 · Key screens',
-        head: 'Hindi startup, skin check, daily checklist, routine builder.',
-        body: `<p>Primary research shaped every feature. A key finding: a language barrier between medical professionals and South Asian patients — so Sun &amp; D is available in English, Malayalam, Tamil, Hindi, and more. The app also accounts for community clothing preferences when calculating UV exposure.</p>`,
+      { kind: 'image', label: '02 · Key Screens',
+        head: 'Multilingual, culturally aware, community first.',
+        body: `<p>Primary research shaped every screen. The app provides a quick checklist taking into consideration clothing preferences of the community, a language selector at onboarding, and skin-tone aware sun exposure guidance that does not assume a default skin tone.</p>`,
         figs: [
-          { label: 'Screen set 1', img: 'imgs/sund1.png' },
           { label: 'Screen set 2', img: 'imgs/sund2.png' },
           { label: 'Screen set 3', img: 'imgs/sund3.png' },
           { label: 'Screen set 4', img: 'imgs/sund4.png' }
-        ]
-      },
-      { kind: 'two', label: '03 · Reflection',
-        head: 'Research before design, every time — even when the deadline is tight.',
-        body: `<p>Sun &amp; D is the clearest example of user-centred design in my portfolio. Designing within real constraints — cultural sensitivity, clinical credibility, multilingual accessibility, and patient privacy — made the visual decisions more focused rather than harder.</p>
-        <ul class="bullets">
-          <li>Phased onboarding — never ask too much, too soon.</li>
-          <li>Context-aware nudges instead of generic push notifications.</li>
-          <li>Privacy architecture suited to a clinical brief.</li>
-          <li>Community stories co-designed with patients and anonymised.</li>
-        </ul>`,
-        figs: [
-          { label: 'Hero overview', img: 'imgs/sund-hero.png' },
-          { label: 'Detail screens', img: 'imgs/sund2.png' }
         ]
       }
     ]
@@ -2839,43 +2906,52 @@ const PROJECTS = {
     title: 'Nestify',
     accent: '#BED4C2',
     dark: false,
-    heroImg: 'imgs/nestify-hero.png',
-    tagline: 'A smart home management app prototype for a personal client — built in Figma over 7 weeks, tested on 5 users, and iterated three times before final delivery.',
+    tagline: 'Smart Home, Simpler Life. A smartphone app prototype custom-built to automate everyday home tasks, completed over 7 weeks in Figma.',
+    discover: { label: 'View Prototype', href: 'https://www.figma.com/proto/9tnAwLwXqkbNLaLz8MVfLE/Untitled?node-id=83-39&p=f&t=GzfXcryc542PjcQ8-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=83%3A39&show-proto-sidebar=1', download: false },
     meta: [
-      ['Client', 'Joshua Carrington · Personal use'],
+      ['Client', 'Personal client'],
       ['Scope', 'UX / UI Design · Prototyping'],
       ['Tools', 'Figma'],
       ['Timeline', '7 weeks · Individual project']
     ],
     sections: [
       { kind: 'two', label: '01 · Brief',
-        head: 'Smart home automation — built for convenience, privacy, and the client\'s older parents.',
-        body: `<p>The client requested a smartphone app to automate everyday tasks: window blinds, fan and air-conditioning, lights, door locking, and TV remote. The design process began with a detailed client interview before any wireframe was drawn.</p>
-        <p>Secondary research showed existing brands weren't meeting the need for convenience and privacy. The client's older parents also needed to use the app — accessibility was non-negotiable from day one.</p>`,
+        head: 'Smart Home, Simpler Life.',
+        body: `<p>This project was completed in the time frame of 7 weeks. Using the UI Design tool Figma, the client requested a smartphone app that is custom-built to automate everyday tasks such as operating window blinds, controlling fan/air-conditioning, lights and locking doors.</p>
+        <p>This design process involved constant user testing to ensure the app features all the specific requirements. The design process involved a detailed interview with the client to understand the brief, secondary research to identify existing projects and improvements and user testing regarding design elements, navigation and accessibility.</p>
+        <p>This process highlighted the importance of customer feedback when designing for specific client needs. Taking time to interview the customer provided vital information before I started creating the Figma prototype. This led to a smooth user testing process which focused on design elements, navigation and accessibility rather than features.</p>`,
         figs: [
           { label: 'Home dashboard', img: 'imgs/nestify-hero.png' },
           { label: 'Screens overview', img: 'imgs/nestify1.png' }
         ]
       },
-      { kind: 'image', label: '02 · Features & screens',
-        head: 'Blinds, air-con, TV remote, new device enrolment.',
-        body: `<p><strong>Feature 1 — Accessibility.</strong> Zoom in/out added after user testing for older users.</p>
-        <p><strong>Feature 2 — Navigation.</strong> Arrow icon at bottom switches rooms; swipe left/right also works.</p>
-        <p><strong>Feature 3 — Scroll motion.</strong> Visible side-scroll indicator labels scrollable pages, moving with content.</p>`,
+      { kind: 'two', label: '02 · Features',
+        head: 'What the client needed, and why existing apps were not enough.',
+        body: `<p>Secondary research showed existing brands are not meeting the client's need for convenience and privacy. The client expressed the following app specifications in the brief interview:</p>
+        <ul class="bullets">
+          <li>Automated Window Blinds</li>
+          <li>App controlled Fan</li>
+          <li>App controlled Lights</li>
+          <li>Automated Door Lock</li>
+          <li>TV Remote Control</li>
+          <li>Air Conditioning Temperature Control</li>
+        </ul>
+        <p>The client also expressed design considerations including a preference for convenience and ease of use, concerns about what makes existing apps unappealing, privacy concerns around data collection and storage, and awareness of overreliance on technology.</p>`,
         figs: [
           { label: 'Blinds control', img: 'imgs/nestify-blinds.png' },
-          { label: 'Air-con control', img: 'imgs/nestify-ac.png' },
-          { label: 'New device enrolment', img: 'imgs/nestify-signup.png' },
-          { label: 'TV remote', img: 'imgs/nestify-tv.png' }
+          { label: 'Air-con control', img: 'imgs/nestify-ac.png' }
         ]
       },
-      { kind: 'image', label: '03 · Prototype overview',
-        head: 'Three screens. Five users. Each round made it simpler.',
-        body: `<p>The final hi-fi prototype distils all user feedback into a clean, confident interface. Speaker integration, accessibility settings, and a unified room-switching model were the three biggest improvements from testing rounds.</p>`,
+      { kind: 'image', label: '03 · User Testing and Changes',
+        head: 'Five users. Three features iterated.',
+        body: `<p>User testing was conducted on 5 different participants, each outlining areas of improvement and positive findings. Users were asked to carry out simple tasks on the app. User concern led to iterations before the final high-fidelity prototype.</p>
+        <p><strong>Feature 1 - Accessibility.</strong> The option to Zoom in and out was added after user testing to meet accessibility requirements. The client specified that though it was a mobile app, the client's older parents would need to use it and often have trouble with small text.</p>
+        <p><strong>Feature 2 - Navigation.</strong> An arrow icon was added to the bottom of the screen allowing users to switch between controls of different rooms from one place. The user can also go back and forth between rooms by swiping left and right for easy navigation.</p>
+        <p><strong>Feature 3 - Scroll Motion.</strong> A side scroll was visibly added to the right-hand side of the page, clearly labelling which page users can scroll further on. This scroll moves alongside the text as users scroll, creating visually appropriate page movement.</p>`,
         figs: [
-          { label: 'Overview 1', img: 'imgs/nestify1.png' },
+          { label: 'New device', img: 'imgs/nestify-signup.png' },
+          { label: 'TV remote', img: 'imgs/nestify-tv.png' },
           { label: 'Overview 2', img: 'imgs/nestify2.png' },
-          { label: 'Overview 3', img: 'imgs/nestify3.png' },
           { label: 'Speaker screen', img: 'imgs/nestify-speaker.png' }
         ]
       }
@@ -2883,49 +2959,41 @@ const PROJECTS = {
   },
 
   travel: {
-    title: 'Wander Notes',
+    title: 'Travel Blog',
     accent: '#6B4028',
     dark: true,
-    heroImg: 'imgs/travel-hero.png',
-    tagline: 'A personal travel blog coded from scratch in HTML, CSS and JavaScript — moving carousels, embedded socials, and a custom loading page. No npm. No frameworks.',
+    tagline: 'Wanderlust by Amritha. A handcoded travel blog built in HTML and CSS over 6 weeks, featuring image carousels, embedded social media links and a custom loading page.',
+    discover: { label: 'Visit Website', href: 'https://anilamritha.github.io/TravelBlog/', download: false },
     meta: [
       ['Type', 'Personal project'],
       ['Scope', 'Web design · Front-end development'],
-      ['Tools', 'HTML · CSS · JavaScript'],
+      ['Tools', 'HTML · CSS · JavaScript · VS Code'],
       ['Timeline', '6 weeks · Live website']
     ],
     sections: [
       { kind: 'two', label: '01 · Brief',
-        head: 'A place to put travel photos that wasn\'t Instagram. Built by hand.',
-        body: `<p>The client frequently travels abroad and wanted to share images with friends and family — with more control and personality than a social feed. Requirements: a welcome page with personal information and social links, a travel photo gallery, location-based stories, and a contact page.</p>
-        <p>Coded entirely in Visual Studio Code — no build tools, no npm. The site works on mobile, tablet, and desktop.</p>`,
+        head: 'Wanderlust by Amritha.',
+        body: `<p>The client frequently travels abroad and enjoys sharing images she captures overseas, online to her friends and family. The design project was approximately 6 weeks and required HTML and CSS coding on Visual Studio Code.</p>
+        <p>The client's requirements included a visually appealing website to be used on mobile, desktop or tablet. The website must feature a welcome page with the client's information and social media pages, the client's travel photos, a page where users can read more about different travel locations and a contact page.</p>
+        <p>Throughout the 6 weeks, wireframes and prototypes were iterated based on regular meetings with the client. The final design incorporates moving image carousels, embedded social media links, a custom loading page and location-based contact details.</p>`,
         figs: [
           { label: 'Hero', img: 'imgs/travel-hero.png' },
           { label: 'On iMac', img: 'imgs/travel-imac.png' }
         ]
       },
-      { kind: 'image', label: '02 · Across devices',
-        head: 'Phone, iPad, MacBook, iMac — all from one codebase.',
-        body: `<p>All images came from the client's personal travel archive. The wireframe and prototype were iterated across regular meetings, with each round improving image quality and gesture refinement. Authentic assets created a visual identity that resonates with genuine storytelling.</p>`,
+      { kind: 'two', label: '02 · Images',
+        head: 'Gesture refinement and image quality at the centre of iteration.',
+        body: `<p>The iteration process allowed for improvement of image quality and essential gestures/finger movements. This was vital in the final design as the website would not function efficiently. By refining these interactions, I ensured that the digital interface felt natural and responsive, fostering a seamless connection between the user and the content. This enhances my ability to design for usability when prototyping, creating high-fidelity designs that are visually compelling but also functional for the required audience.</p>`,
         figs: [
           { label: 'On iPhone', img: 'imgs/travel-phone.png' },
-          { label: 'On iPad', img: 'imgs/travel-ipad.png' },
-          { label: 'On MacBook', img: 'imgs/travel-mac.png' },
-          { label: 'On iMac', img: 'imgs/travel-imac.png' }
+          { label: 'On iPad', img: 'imgs/travel-ipad.png' }
         ]
       },
-      { kind: 'two', label: '03 · Reflection',
-        head: 'Refining interactions taught me what it means to design for usability.',
-        body: `<p>The iteration process was vital — especially for gesture refinement on mobile. By refining these interactions, I ensured the interface felt natural and responsive, with a seamless connection between user and content.</p>
-        <ul class="bullets">
-          <li>Responsive across mobile, tablet, and desktop.</li>
-          <li>Custom loading animation on page entry.</li>
-          <li>Image carousels built without a library.</li>
-          <li>Location-based contact details for each destination.</li>
-        </ul>`,
+      { kind: 'two', label: '03 · Originality',
+        head: 'All content sourced from the client\'s personal travel archive.',
+        body: `<p>All the images and videos were sourced from the client's personal travel content, ensuring originality. The website included a contact page for the wider audience to find more information on locations and travel tips. Utilising these authentic assets allowed me to create a unique visual identity that resonates with genuine storytelling rather than relying on generic stock images. This ensures the platform is community-driven and welcoming for aspiring travelers.</p>`,
         figs: [
-          { label: 'Hero overview', img: 'imgs/travel-hero.png' },
-          { label: 'iMac view', img: 'imgs/travel-imac.png' }
+          { label: 'On MacBook', img: 'imgs/travel-mac.png' }
         ]
       }
     ]
@@ -2935,46 +3003,31 @@ const PROJECTS = {
     title: 'NewLyf',
     accent: '#EFE6DC',
     dark: false,
-    heroImg: 'imgs/newlyf-hero.png',
-    tagline: 'A responsive retirement and investment home website for a Manly West real estate company — designed for adults 65+ and built in pure HTML and CSS.',
+    tagline: 'Manly West Living. A responsive retirement and investment home website developed in HTML and CSS, designed for adults aged 65 and above.',
+    discover: { label: 'Visit Website', href: 'https://anilamritha.github.io/newlyf/', download: false },
     meta: [
-      ['Client', 'Real estate company · Manly West'],
+      ['Client', 'Manly West · Real estate'],
       ['Scope', 'Web design · Front-end development'],
-      ['Tools', 'HTML · CSS · JavaScript'],
+      ['Tools', 'HTML · CSS · VS Code'],
       ['Timeline', '7 weeks · Live website']
     ],
     sections: [
       { kind: 'two', label: '01 · Brief',
-        head: 'A site that doesn\'t shout, doesn\'t patronise, and works on a five-year-old iPad.',
-        body: `<p>Newlyf is a responsive retirement and investment home website developed in Visual Studio Code. The primary challenge was balancing modern aesthetics with high accessibility standards for adults 65+. Prioritising information architecture ensured navigation was intuitive and content was immediately clear to users with varying digital literacy.</p>
-        <p>Imagery was strategically sourced from Google Earth and current local development sites, giving users an authentic sense of their potential future environment.</p>`,
+        head: 'Manly West Living.',
+        body: `<p>Newlyf is a responsive retirement and investment home website developed on Visual Studio Code using HTML and CSS. Designed and coded within a 7-week timeframe, the project serves as a comprehensive demonstration of accessible front-end development tailored specifically for older adults aged 65 and above.</p>
+        <p>The primary challenge was to create a digital presence that balanced modern aesthetics with high accessibility standards required for the target demographic. Prioritising information architecture ensured that the navigation was intuitive and the content was immediately clear to users with varying levels of digital literacy.</p>
+        <p>Imagery was strategically sourced from Google Earth and current local development sites, providing users with an authentic, tangible sense of their potential future environment.</p>`,
         figs: [
           { label: 'Hero', img: 'imgs/newlyf-hero.png' },
           { label: 'Laptop view', img: 'imgs/newlyf-laptop.png' }
         ]
       },
-      { kind: 'image', label: '02 · Across devices',
-        head: 'Responsive — tested on the screens the audience actually uses.',
-        body: `<p>Every design choice was made with the target demographic in mind. Larger body type, generous touch targets, gentle hover states, unhurried scrolling. The "request a tour" path never buries the form behind a popup.</p>`,
+      { kind: 'image', label: '02 · Design Elements',
+        head: 'Usability across every device, for every member of the household.',
+        body: `<p>The final code maintains usability across mobile, tablet and desktops. User-centric design choices were also made including legible typography for the target audience and clear touch/movement of users to ensure the design was usable. These design elements address common accessibility challenges faced by older users, ensuring the functionality of the website offers a truly inclusive user experience.</p>`,
         figs: [
-          { label: 'Hero', img: 'imgs/newlyf-hero.png' },
-          { label: 'On laptop', img: 'imgs/newlyf-laptop.png' },
           { label: 'On iPad', img: 'imgs/newlyf-ipad.png' },
           { label: 'On phone', img: 'imgs/newlyf-phone.png' }
-        ]
-      },
-      { kind: 'two', label: '03 · Outcome',
-        head: 'Usability across all devices, for every member of the household.',
-        body: `<p>The final code maintains usability across mobile, tablet, and desktop. User-centric design choices address common accessibility challenges for older users, ensuring a truly inclusive experience.</p>
-        <ul class="bullets">
-          <li>Legible typography scaled for 65+ audience.</li>
-          <li>Information architecture maps decision journey, not just content.</li>
-          <li>Imagery sourced from Google Earth for local authenticity.</li>
-          <li>Fully responsive — tested on the devices the audience actually uses.</li>
-        </ul>`,
-        figs: [
-          { label: 'iPad view', img: 'imgs/newlyf-ipad.png' },
-          { label: 'Phone view', img: 'imgs/newlyf-phone.png' }
         ]
       }
     ]
@@ -2984,47 +3037,39 @@ const PROJECTS = {
     title: 'Winn Lane',
     accent: '#340B01',
     dark: true,
-    heroImg: 'imgs/winnlane-hero.png',
-    tagline: 'Three p5.js mini-games for the Louie Play Cabinet on Winn Lane, Fortitude Valley — 4-way joystick, three arcade buttons, and three real shopfronts as levels.',
+    tagline: 'Three p5.js mini-games for the Louie Play Cabinet in Fortitude Valley, celebrating the real stores of Winn Lane. Completed in 7 weeks using p5.js and Adobe Illustrator.',
+    discover: { label: 'Play the Games', href: 'https://anilamritha.github.io/WinnLane/', download: false },
     meta: [
-      ['Client', 'Arthur Apostolis · Director, Winn Ln'],
+      ['Client', 'Arthur Apostolis · Winn Lane'],
       ['Scope', 'Interactive design · Game dev · Illustration'],
       ['Tools', 'p5.js · Adobe Illustrator'],
       ['Timeline', '7 weeks · Installed in cabinet']
     ],
     sections: [
-      { kind: 'two', label: '01 · The commission',
-        head: 'An interactive exhibition to draw in customers, create lasting memories, and connect the lane.',
-        body: `<p>Arthur created Winn Lane to give opportunity to first-time businesses. The lane has a large queer community and over 80 premises — cafés, retail, and bars. The exhibition was created to reach a wider audience, build community, and drive retention by showcasing the businesses inside.</p>
-        <p>Exhibited on the Louie Play Cabinet — a retro arcade machine with a 4-way joystick and three arcade buttons as its only inputs. That hardware constraint shaped every design decision.</p>`,
+      { kind: 'two', label: '01 · The Commission',
+        head: 'An interactive exhibition to draw in customers and create lasting memories within the lane.',
+        body: `<p>Winn Lane Fortitude Valley requested an interactive creative coding exhibition to draw in customers, create lasting memories within the lane and persuade customers to interact with different people. This Creative Coding Project was completed in 7 weeks, using p5.js for the code and Adobe Illustrator for images.</p>
+        <p>The final project is a creative solution, incorporating mini games that celebrate different aspects of Winn Lane, creating a welcoming, accessible and distinctive theme. The design process involved mapping user journeys and Winn Lane's story to capture the audience and drive engagement. The games were designed based on actual stores in Winn Lane, encouraging customers to visit the stores after playing the games.</p>
+        <p>This design process required constant iteration after user testing and trial and error. Despite this, the final solution evidenced strong attention to detail and passion for community participation.</p>`,
         figs: [
           { label: 'Cabinet hero', img: 'imgs/winnlane-hero.png' },
           { label: 'Game screens', img: 'imgs/winnlane1.png' }
         ]
       },
-      { kind: 'image', label: '02 · The three games',
-        head: 'Ben\'s Burgers. No. 5 Café. Quivr Bar.',
-        body: `<p>Each game is tied to a real shopfront — designed so players want to visit the actual store after playing. All visual assets were illustrated in Illustrator and exported as PNGs for use in p5.js.</p>
-        <p><strong>Ben's Burgers</strong> — falling burger stack. <strong>No. 5 Café</strong> — latte art drawing. <strong>Quivr Bar</strong> — cocktail-making timing game.</p>`,
+      { kind: 'two', label: '02 · Background',
+        head: 'A lane built on community, queerness and small business.',
+        body: `<p>Arthur created Winn Lane to bring small businesses to life and give opportunity for first-time businesses. Winn Lane has a large Queer community and draws in many customers with over 80 premises of cafe services, retail stores and bars within the lane. This exhibition was created in hopes of reaching a wider audience, creating a sense of community within the lane. There was an opportunity to showcase small businesses and drive customer retention.</p>
+        <p>The creative code was to be exhibited on the Louie Play Cabinet, a cabinet based on the look of a retro arcade machine and old-style computers. The cabinet had its own set of unique inputs suited for different styles of coding sketch. The Louie Play Cabinet's input included a 4-way joystick and three arcade buttons. This meant that the code had to be suited for this cabinet's use. The most challenging portion of this project was ensuring the games remained fun and entertaining with the 3 buttons and joystick.</p>`,
         figs: [
-          { label: 'Game screens 1', img: 'imgs/winnlane1.png' },
-          { label: 'Game screens 2', img: 'imgs/winnlane2.png' },
-          { label: 'Game screens 3', img: 'imgs/winnlane3.png' },
-          { label: 'Hero / cabinet', img: 'imgs/winnlane-hero.png' }
+          { label: 'Game screens 2', img: 'imgs/winnlane2.png' }
         ]
       },
-      { kind: 'two', label: '03 · Reflection',
-        head: 'You design differently when people are standing behind the player.',
-        body: `<p>Designing for a public arcade cabinet is almost nothing like designing for a browser. People walk up mid-round, rarely read instructions, and will absolutely smash every button at once. Every decision had to survive a stranger pressing everything simultaneously — and still make them smile.</p>
-        <ul class="bullets">
-          <li>Player avatar loaded as sprite for map movement.</li>
-          <li>Shopfront illustrations designed in Illustrator, exported as PNGs.</li>
-          <li>Cabinet inputs: 4-way joystick + 3 arcade buttons only.</li>
-          <li>Constant iteration after each round of user testing.</li>
-        </ul>`,
+      { kind: 'image', label: '03 · The Three Games',
+        head: 'Ben\'s Burgers. Quivr Bar. No. 5 Cafe.',
+        body: `<p>After trial and error, an unsatisfactory drag-and-drop mechanism in Ben's Burger evolved to a falling burger stack game. Quivr Bar's cocktail making game was aesthetically edited multiple times before finalising the simple game. Finally, No. 5's Cafe's coffee drawing game gives users the freedom to select various shapes to draw.</p>
+        <p>Each game is tied to a real shopfront, designed so players want to visit the actual store after playing. All visual assets were illustrated in Illustrator and exported as PNGs for use in p5.js.</p>`,
         figs: [
-          { label: 'Winn Lane hero', img: 'imgs/winnlane-hero.png' },
-          { label: 'Game overview', img: 'imgs/winnlane2.png' }
+          { label: 'Game screens 3', img: 'imgs/winnlane3.png' }
         ]
       }
     ]
@@ -3041,9 +3086,6 @@ const PROJECTS = {
   function buildProject(p){
     const heroClass = p.dark ? 'proj-hero is-dark' : 'proj-hero';
     const meta = p.meta.map(m => `<div><span>${m[0]}</span>${m[1]}</div>`).join('');
-    const heroImgHtml = p.heroImg
-      ? `<img class="proj-hero-img" src="${p.heroImg}" alt="${p.title} hero" loading="lazy">`
-      : '';
 
     let sectionsHtml = '';
     p.sections.forEach(s => {
@@ -3076,6 +3118,10 @@ const PROJECTS = {
       }
     });
 
+    const discoverBtn = p.discover
+      ? `<a class="btn discover-btn" href="${p.discover.href}" ${p.discover.download ? 'download' : 'target="_blank" rel="noopener"'} data-cursor="hover">${p.discover.label} &rarr;</a>`
+      : '';
+
     return `
       <article class="proj">
         <header class="${heroClass}" style="--proj-accent:${p.accent}">
@@ -3083,14 +3129,14 @@ const PROJECTS = {
           <h2 class="proj-title">${p.title}</h2>
           <p class="proj-tagline">${p.tagline}</p>
           <div class="proj-meta-grid">${meta}</div>
-          ${heroImgHtml}
         </header>
         ${sectionsHtml}
         <section class="proj-section" style="border-bottom:0;">
-          <div class="label">next</div>
-          <h3>Want to talk about a similar brief?</h3>
-          <p>I'm picking up new commissions through 2026, with a soft preference for community-led, multilingual, or print-meets-digital work.</p>
+          <div class="label">discover</div>
+          <h3>Ready to see it in the world?</h3>
+          <p>Explore the finished project below, or get in touch if you have a similar brief.</p>
           <div class="cta-row">
+            ${discoverBtn}
             <a class="btn primary" href="mailto:amritha2825@gmail.com" data-cursor="hover">Email me</a>
             <a class="btn" href="https://www.behance.net/amrithaanil1" target="_blank" rel="noopener" data-cursor="hover">More on Behance</a>
           </div>
