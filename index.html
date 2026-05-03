@@ -142,6 +142,7 @@
     <div class="sticker s-ticket" id="stickTicket">
       <div class="ticket">
         <div class="ticket-main">
+          <div class="ticket-scan"></div>
           <div class="ticket-tag">Boarding pass · 6:00pm</div>
           <div class="ticket-route">PRINT <span class="arrow">→</span> WEB</div>
           <div class="ticket-row">
@@ -277,6 +278,7 @@
     <!-- 7. Terminal -->
     <div class="sticker s-terminal" id="stickTerminal">
       <div class="terminal">
+        <input class="term-input" type="text" autocomplete="off" spellcheck="false" tabindex="-1">
         <div class="terminal-bar">
           <div class="dots"><i></i><i></i><i></i></div>
           <div class="title">amritha · zsh</div>
@@ -611,12 +613,12 @@
   <div class="wrap">
     <div class="desk-header" style="margin-bottom: 40px;">
       <h2 class="desk-title reveal-fade">Bits<br>and <em>bobs.</em></h2>
-      <p class="desk-sub reveal-fade">Process scraps, sticky note thinking, things I made between things. Drag them around if it helps.</p>
+      <p class="desk-sub reveal-fade">Process scraps, sticky note thinking, things I made between things. Hover to feel the breeze.</p>
     </div>
     <div class="board-frame reveal-fade">
       <div class="board-cork" id="boardCork">
 
-        <div class="pin-item" style="left: 2%; top: 4%; transform: rotate(-5deg);" data-cursor="drag">
+        <div class="pin-item" style="left: 2%; top: 4%;" data-rot="-5">
           <span class="pin"></span>
           <div class="pin-photo">
             <div class="ph" style="background: linear-gradient(135deg, #E8B07A, #F6F4F3);">
@@ -628,7 +630,7 @@
           </div>
         </div>
 
-        <div class="pin-item" style="left: 30%; top: 2%; transform: rotate(3deg);" data-cursor="drag">
+        <div class="pin-item" style="left: 30%; top: 2%;" data-rot="3">
           <span class="pin" style="background: radial-gradient(circle at 30% 30%, #f9d289, #c47a1c)"></span>
           <div class="pin-note">
             <span class="tape"></span>
@@ -636,7 +638,7 @@
           </div>
         </div>
 
-        <div class="pin-item" style="left: 55%; top: 6%; transform: rotate(-2deg);" data-cursor="drag">
+        <div class="pin-item" style="left: 55%; top: 6%;" data-rot="-2">
           <span class="pin"></span>
           <div class="pin-photo">
             <div class="ph" style="background: linear-gradient(135deg, #BED4C2, #7B967A);">
@@ -648,14 +650,14 @@
           </div>
         </div>
 
-        <div class="pin-item" style="left: 76%; top: 3%; transform: rotate(7deg);" data-cursor="drag">
+        <div class="pin-item" style="left: 76%; top: 3%;" data-rot="7">
           <span class="pin" style="background: radial-gradient(circle at 30% 30%, #b1d8a4, #4d8a3d)"></span>
           <div class="pin-tag">
             હેલો · नमस्ते · வணக்கம் · hello
           </div>
         </div>
 
-        <div class="pin-item" style="left: 2%; top: 42%; transform: rotate(2deg);" data-cursor="drag">
+        <div class="pin-item" style="left: 2%; top: 40%;" data-rot="2">
           <span class="pin"></span>
           <div class="pin-note mint">
             <span class="tape"></span>
@@ -663,7 +665,7 @@
           </div>
         </div>
 
-        <div class="pin-item" style="left: 28%; top: 44%; transform: rotate(-3deg);" data-cursor="drag">
+        <div class="pin-item" style="left: 28%; top: 43%;" data-rot="-3">
           <span class="pin" style="background: radial-gradient(circle at 30% 30%, #b8d8e6, #4a8aa6)"></span>
           <div class="pin-photo">
             <div class="ph" style="background: linear-gradient(135deg, #340B01, #6B4028);">
@@ -677,7 +679,7 @@
           </div>
         </div>
 
-        <div class="pin-item" style="left: 54%; top: 40%; transform: rotate(5deg);" data-cursor="drag">
+        <div class="pin-item" style="left: 54%; top: 39%;" data-rot="5">
           <span class="pin"></span>
           <div class="pin-photo">
             <div class="ph" style="background: linear-gradient(135deg, #6B4028, #340B01);"></div>
@@ -685,7 +687,7 @@
           </div>
         </div>
 
-        <div class="pin-item" style="left: 78%; top: 46%; transform: rotate(-4deg);" data-cursor="drag">
+        <div class="pin-item" style="left: 78%; top: 44%;" data-rot="-4">
           <span class="pin" style="background: radial-gradient(circle at 30% 30%, #f4a4a0, #b04040)"></span>
           <div class="pin-note rose">
             <span class="tape"></span>
@@ -693,14 +695,14 @@
           </div>
         </div>
 
-        <div class="pin-item" style="left: 10%; top: 80%; transform: rotate(-6deg);" data-cursor="drag">
+        <div class="pin-item" style="left: 8%; top: 62%;" data-rot="-6">
           <span class="pin"></span>
           <div class="pin-tag" style="background: var(--c-ink); color: var(--c-cream); border-color: transparent;">
             Brisbane · QLD · 2026
           </div>
         </div>
 
-        <div class="pin-item" style="left: 36%; top: 78%; transform: rotate(4deg);" data-cursor="drag">
+        <div class="pin-item" style="left: 36%; top: 65%;" data-rot="4">
           <span class="pin" style="background: radial-gradient(circle at 30% 30%, #e6cda0, #9a7820)"></span>
           <div class="pin-photo">
             <div class="ph" style="background: linear-gradient(135deg, #BED4C2, #F6F4F3);"></div>
@@ -708,7 +710,7 @@
           </div>
         </div>
 
-        <div class="pin-item" style="left: 62%; top: 82%; transform: rotate(-2deg);" data-cursor="drag">
+        <div class="pin-item" style="left: 62%; top: 61%;" data-rot="-2">
           <span class="pin"></span>
           <div class="pin-note">
             <span class="tape"></span>

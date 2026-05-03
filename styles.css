@@ -805,6 +805,59 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 .s-stamp    { top: 16px;    left: 6%;     transform: rotate(-8deg); }
 .s-melodrama{ bottom: 80px; left: 22%;    transform: rotate(4deg); }
 
+/* --- Sticker hover interactions --- */
+@keyframes pendulum{
+  0%, 100%{ transform: rotate(0deg); }
+  30%     { transform: rotate(-4deg); }
+  70%     { transform: rotate(4deg); }
+}
+.s-lanyard:hover .lanyard{
+  transform-origin: top center;
+  animation: pendulum 2.8s ease-in-out infinite;
+}
+
+@keyframes scan-beam{
+  0%  { top: 0;    opacity: 1; }
+  85% { opacity: 1; }
+  100%{ top: 100%; opacity: 0; }
+}
+.ticket-scan{
+  position: absolute; left: 0; right: 0; top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(210,50,50,.85) 25%, rgba(255,90,90,1) 50%, rgba(210,50,50,.85) 75%, transparent);
+  box-shadow: 0 0 6px rgba(220,50,50,.7), 0 0 14px rgba(220,50,50,.35);
+  opacity: 0;
+  pointer-events: none;
+}
+.s-ticket:hover .ticket-scan{ animation: scan-beam 2s ease-in-out infinite; }
+
+@keyframes disc-spin{ to{ transform: rotate(360deg); } }
+.s-melodrama:hover .cd-disc-peek{ animation: disc-spin 2.5s linear infinite; }
+
+@keyframes stamp-press{
+  0%, 100%{ transform: scale(1)    rotate(0deg); }
+  40%     { transform: scale(0.93) rotate(-3deg); }
+  70%     { transform: scale(1.04) rotate(1deg); }
+}
+.s-stamp:hover .stamp{ animation: stamp-press 1s ease-in-out; }
+
+.s-paper:hover .rippedpaper{
+  transform: translateY(-7px) rotate(1.5deg);
+  transition: transform .4s var(--ease-soft);
+}
+
+.s-terminal:hover .terminal{
+  box-shadow: 0 0 0 1px rgba(190,212,194,.25), 0 20px 50px rgba(52,11,1,.22);
+}
+.s-terminal.is-active .terminal{
+  box-shadow: 0 0 0 1px rgba(190,212,194,.5), 0 24px 60px rgba(52,11,1,.28);
+}
+.term-input{
+  position: absolute; opacity: 0;
+  width: 1px; height: 1px;
+  pointer-events: none;
+}
+
 @media (max-width: 980px){
   .hero-stage{ min-height: 1100px; }
   .s-lanyard  { top: 600px; left: 20px; }
@@ -1052,11 +1105,12 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   display: grid; place-items: end center;
   padding-bottom: 28%;
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity .5s var(--ease-soft), transform .55s var(--ease-pop);
+  transform: translateY(30px) scale(0.65);
+  transform-origin: bottom center;
+  transition: opacity .25s, transform .55s cubic-bezier(.34, 1.56, .64, 1);
 }
-.folder-tile:hover .folder-thing{ opacity: 1; transform: translateY(-22%); }
-.folder-thing svg{ width: 56%; }
+.folder-tile:hover .folder-thing{ opacity: 1; transform: translateY(-68%) scale(1.12); }
+.folder-thing svg{ width: 72%; }
 
 .folder-meta{
   margin-top: 16px;
@@ -1344,13 +1398,11 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 }
 .pin-item{
   position: absolute;
-  cursor: grab;
+  cursor: default;
   filter: drop-shadow(0 14px 22px rgba(52,11,1,.16));
-  will-change: transform;
   user-select: none;
   -webkit-user-select: none;
 }
-.pin-item.is-dragging{ cursor: grabbing; z-index: 50; filter: drop-shadow(0 22px 36px rgba(52,11,1,.28)); }
 .pin-item .pin{
   position: absolute; left: 50%; top: -8px;
   transform: translateX(-50%);
@@ -1506,17 +1558,23 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   font-size: 14px;
   letter-spacing: .04em;
   position: relative;
-  display: inline-flex; align-items: baseline;
+  display: block;
+  height: 28px;
   overflow: hidden;
+  line-height: 28px;
+  color: var(--c-cream);
+  text-decoration: none;
 }
 .social-morph .text{
-  display: inline-block;
+  display: block;
+  line-height: 28px;
   transition: transform .45s var(--ease-soft), opacity .35s;
 }
 .social-morph .ic{
-  position: absolute; left: 0; bottom: 0;
+  position: absolute; left: 0; top: 0; bottom: 0;
+  display: flex; align-items: center;
   font-family: var(--font-display);
-  font-size: 26px; letter-spacing: .04em;
+  font-size: 18px; letter-spacing: .06em;
   font-weight: 500;
   transform: translateY(110%);
   transition: transform .55s var(--ease-pop);
@@ -1542,7 +1600,7 @@ footer .wrap{
 /* ============ About photo layout ============ */
 .about-photo-row{
   display: grid;
-  grid-template-columns: 340px 1fr;
+  grid-template-columns: 300px 1fr;
   gap: 60px;
   align-items: start;
   margin-top: 24px;
@@ -1564,7 +1622,7 @@ footer .wrap{
 .about-statement .about-body p{ margin: 0 0 1em; }
 .about-skills-row{
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
+  grid-template-columns: 300px 1fr;
   gap: 60px;
   margin-top: 60px;
   align-items: start;

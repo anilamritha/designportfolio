@@ -321,50 +321,96 @@ function runIntro(){
 }
 
 
-/* ---------- draggable bulletin pins ---------- */
+/* ---------- bulletin board: static pins + wind ---------- */
 (() => {
-  if (typeof Draggable === 'undefined') return;
-
-  /* ---- Bulletin board pins: fix GSAP transform conflict ---- */
   const cork = document.getElementById('boardCork');
   if (!cork) return;
-  const corkW = cork.offsetWidth || 800;
-  const corkH = cork.offsetHeight || 660;
+  const pins = [...cork.querySelectorAll('.pin-item')];
 
-  document.querySelectorAll('.pin-item').forEach(el => {
-    // Pull left/top percentages and rotation from inline style
-    const leftPct  = parseFloat(el.style.left)  || 0;
-    const topPct   = parseFloat(el.style.top)    || 0;
-    const rotMatch = (el.style.transform || '').match(/rotate\((-?[\d.]+)deg\)/);
-    const rot      = rotMatch ? parseFloat(rotMatch[1]) : 0;
+  // CSS left/top % handles position; GSAP owns rotation from data-rot
+  pins.forEach(el => {
+    const rot = parseFloat(el.dataset.rot ?? 0);
+    gsap.set(el, { rotation: rot });
+  });
 
-    // Convert % to px relative to cork
-    const xPx = (leftPct / 100) * corkW;
-    const yPx = (topPct  / 100) * corkH;
-
-    // Clear inline style props, let GSAP own all transforms
-    el.style.left      = '0';
-    el.style.top       = '0';
-    el.style.transform = '';
-
-    // Set initial position + rotation through GSAP's matrix
-    gsap.set(el, { x: xPx, y: yPx, rotation: rot });
-
-    Draggable.create(el, {
-      type: 'x,y',
-      edgeResistance: 0.85,
-      onDragStart(){
-        gsap.killTweensOf(el);
-        el.classList.add('is-dragging');
-        gsap.set(el, { scale: 1.06, zIndex: 50 });
-        document.body.classList.add('is-drag');
-      },
-      onDragEnd(){
-        el.classList.remove('is-dragging');
-        gsap.to(el, { scale: 1, duration: .35, ease: 'back.out(1.4)' });
-        document.body.classList.remove('is-drag');
-      }
+  // Hover wind burst when cursor enters the board
+  cork.addEventListener('mouseenter', () => {
+    pins.forEach((el, i) => {
+      const base    = parseFloat(el.dataset.rot ?? 0);
+      const flutter = (Math.random() - 0.5) * 12;
+      gsap.to(el, {
+        rotation: base + flutter,
+        duration: 0.3 + Math.random() * 0.25,
+        ease: 'power2.out',
+        onComplete() {
+          gsap.to(el, { rotation: base, duration: 1.1, ease: 'elastic.out(1, 0.45)', delay: i * 0.025 });
+        }
+      });
     });
+  });
+
+  // Scroll-speed flutter
+  let lastY = window.scrollY;
+  window.addEventListener('scroll', () => {
+    const delta = window.scrollY - lastY;
+    lastY = window.scrollY;
+    if (Math.abs(delta) < 5) return;
+    pins.forEach((el, i) => {
+      const base = parseFloat(el.dataset.rot ?? 0);
+      const kick = delta * 0.07 * (i % 2 === 0 ? 1 : -1);
+      gsap.to(el, { rotation: base + kick, duration: 0.12, ease: 'none', overwrite: 'auto' });
+      gsap.to(el, { rotation: base, duration: 1.4, ease: 'elastic.out(1, 0.35)', delay: 0.12, overwrite: false });
+    });
+  }, { passive: true });
+})();
+
+
+/* ---------- terminal interactive typing ---------- */
+(() => {
+  const termSticker = document.querySelector('.s-terminal');
+  const termBody    = termSticker?.querySelector('.terminal-body');
+  const termInput   = termSticker?.querySelector('.term-input');
+  if (!termSticker || !termBody || !termInput) return;
+
+  const CMDS = {
+    'whoami':     'marketing & interactive design grad,\nbrisbane based, brown skin first',
+    'ls work/':   'mirchi · sund · nestify · travel · newlyf · winnlane',
+    'echo $vibe': '"diversity is the premise, not the footnote"',
+    'help':       'try: whoami  /  ls work/  /  echo $vibe  /  clear',
+    'clear':      '__clear__'
+  };
+  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const updatePrompt = v => {
+    termBody.lastElementChild.innerHTML = `<span class="pr">~ $</span> ${esc(v)}<span class="blink"></span>`;
+  };
+
+  termSticker.addEventListener('click', () => {
+    termSticker.classList.add('is-active');
+    termInput.style.pointerEvents = 'auto';
+    termInput.focus();
+    termInput.style.pointerEvents = 'none';
+  });
+  document.addEventListener('click', e => {
+    if (!termSticker.contains(e.target)) termSticker.classList.remove('is-active');
+  });
+  termInput.addEventListener('input', () => updatePrompt(termInput.value));
+  termInput.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    const cmd = termInput.value.trim();
+    const res = CMDS[cmd.toLowerCase()];
+    const cmdEl = document.createElement('div');
+    cmdEl.innerHTML = `<span class="pr">~ $</span> ${esc(cmd)}`;
+    termBody.insertBefore(cmdEl, termBody.lastElementChild);
+    if (res === '__clear__') {
+      while (termBody.children.length > 1) termBody.removeChild(termBody.firstElementChild);
+    } else {
+      const outEl = document.createElement('div');
+      outEl.className = 'out';
+      outEl.textContent = res ?? `command not found: ${cmd}`;
+      termBody.insertBefore(outEl, termBody.lastElementChild);
+    }
+    termInput.value = '';
+    updatePrompt('');
   });
 })();
 
