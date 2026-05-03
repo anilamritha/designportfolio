@@ -265,17 +265,6 @@ function runIntro(){
     clearProps: 'opacity,scale'
   });
 
-  // sticker breathing/idle wiggle
-  gsap.utils.toArray('.sticker').forEach((el, i) => {
-    gsap.to(el, {
-      y: gsap.utils.random(-8, 8),
-      rotation: '+=' + gsap.utils.random(-1.5, 1.5),
-      duration: 4 + Math.random() * 3,
-      repeat: -1, yoyo: true, ease: 'sine.inOut',
-      delay: i * 0.2
-    });
-  });
-
   // scroll reveals
   gsap.utils.toArray('.reveal-fade').forEach(el => {
     gsap.to(el, {
@@ -332,25 +321,9 @@ function runIntro(){
 }
 
 
-/* ---------- draggable hero stickers + bulletin pins ---------- */
+/* ---------- draggable bulletin pins ---------- */
 (() => {
   if (typeof Draggable === 'undefined') return;
-
-  document.querySelectorAll('.sticker').forEach(el => {
-    Draggable.create(el, {
-      type: 'x,y',
-      inertia: false,
-      onDragStart(){
-        gsap.killTweensOf(el);
-        gsap.to(el, { scale: 1.05, zIndex: 50, duration: .25 });
-        document.body.classList.add('is-drag');
-      },
-      onDragEnd(){
-        gsap.to(el, { scale: 1, duration: .3, ease: 'power3.out' });
-        document.body.classList.remove('is-drag');
-      }
-    });
-  });
 
   /* ---- Bulletin board pins: fix GSAP transform conflict ---- */
   const cork = document.getElementById('boardCork');
@@ -452,13 +425,13 @@ const PROJECTS = {
     title: 'Mirchi',
     accent: '#E8B07A',
     dark: false,
-    tagline: 'A freelance print project for a well-known Indian restaurant in Canberra, 3 to 4 weeks. The menu had not been updated since 2014.',
+    tagline: 'The Essence of True Indian Dining',
     discover: { label: 'Download Menu', href: 'uploads/Mirchi Final Design.pdf', download: true },
     meta: [
-      ['Client', 'Mirchi Indian Cuisine · Canberra'],
-      ['Scope', 'Menu design · Brand refresh · Print'],
-      ['Tools', 'InDesign · Photoshop · Illustrator'],
-      ['Timeline', '3 to 4 weeks · Commission']
+      ['Client', 'Mirchi Indian Cuisine'],
+      ['Scope', 'Menu Design / Brand Refresh'],
+      ['Tools', 'InDesign / Photoshop / Illustrator'],
+      ['Timeline', '3 to 4 Weeks']
     ],
     sections: [
       { kind: 'two', label: '01 · Overview',
@@ -493,13 +466,13 @@ const PROJECTS = {
     title: 'Sun & D',
     accent: '#F0D9B8',
     dark: false,
-    tagline: 'Smart Sun Habits for Healthy Vitamin D. A Figma prototype designed for the South Asian community in Australia over approximately 2 months.',
+    tagline: 'Smart Sun Habits for Healthy Vitamin D',
     discover: { label: 'View Prototype', href: 'https://www.figma.com/proto/HLO2wb4L5kIwFjax5Lya1P/Sun---D-QLD-n11539151?node-id=8021-4&starting-point-node-id=8021%3A4&t=yZhPzlhB2KBQ7fx4-1', download: false },
     meta: [
-      ['Client', 'QLD Health · Community project'],
-      ['Scope', 'UX Design · Research · Prototype · Multilingual'],
-      ['Tools', 'Figma · Mockflow · Illustrator'],
-      ['Timeline', '2 months · Individual project']
+      ['Client', 'QLD Health Clinic (Confidential)'],
+      ['Scope', 'UX Design / Prototyping'],
+      ['Tools', 'Figma / Mockflow / Illustrator'],
+      ['Timeline', '2 Months']
     ],
     sections: [
       { kind: 'two', label: '01 · The Brief',
@@ -528,13 +501,13 @@ const PROJECTS = {
     title: 'Nestify',
     accent: '#BED4C2',
     dark: false,
-    tagline: 'Smart Home, Simpler Life. A smartphone app prototype custom-built to automate everyday home tasks, completed over 7 weeks in Figma.',
+    tagline: 'Smart Home, Simpler Life',
     discover: { label: 'View Prototype', href: 'https://www.figma.com/proto/9tnAwLwXqkbNLaLz8MVfLE/Untitled?node-id=83-39&p=f&t=GzfXcryc542PjcQ8-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=83%3A39&show-proto-sidebar=1', download: false },
     meta: [
-      ['Client', 'Personal client'],
-      ['Scope', 'UX / UI Design · Prototyping'],
+      ['Client', 'Joshua Carrington · Personal Use'],
+      ['Scope', 'UX / UI Design / Prototyping'],
       ['Tools', 'Figma'],
-      ['Timeline', '7 weeks · Individual project']
+      ['Timeline', '7 Weeks']
     ],
     sections: [
       { kind: 'two', label: '01 · Brief',
@@ -567,9 +540,9 @@ const PROJECTS = {
       { kind: 'image', label: '03 · User Testing and Changes',
         head: 'Five users. Three features iterated.',
         body: `<p>User testing was conducted on 5 different participants, each outlining areas of improvement and positive findings. Users were asked to carry out simple tasks on the app. User concern led to iterations before the final high-fidelity prototype.</p>
-        <p><strong>Feature 1 - Accessibility.</strong> The option to Zoom in and out was added after user testing to meet accessibility requirements. The client specified that though it was a mobile app, the client's older parents would need to use it and often have trouble with small text.</p>
-        <p><strong>Feature 2 - Navigation.</strong> An arrow icon was added to the bottom of the screen allowing users to switch between controls of different rooms from one place. The user can also go back and forth between rooms by swiping left and right for easy navigation.</p>
-        <p><strong>Feature 3 - Scroll Motion.</strong> A side scroll was visibly added to the right-hand side of the page, clearly labelling which page users can scroll further on. This scroll moves alongside the text as users scroll, creating visually appropriate page movement.</p>`,
+        <p><strong>Feature 1 - Accessibility.</strong> The option to Zoom in and out was added after user testing to meet accessibility requirements. The client specified that though it was a mobile app, the client's older parents would need to use it and often have trouble with small text. This feature was added through a simple button, allowing the font size to increase or decrease upon user request.</p>
+        <p><strong>Feature 2 - Navigation.</strong> As user testing showed uncertainty of page directions, an arrow icon was added to the bottom of the screen allowing users to switch between controls of different rooms from one place. The user can also go back and forth between rooms by swiping left and right for easy navigation.</p>
+        <p><strong>Feature 3 - Scroll Motion.</strong> Similarly, a side scroll was visibly added to the right-hand side of the page, clearly labelling which page users can scroll further on. This scroll moves alongside the text as users scroll, creating visually appropriate page movement. This iteration meets user requirements.</p>`,
         figs: [
           { label: 'New device', img: 'imgs/nestify-signup.png' },
           { label: 'TV remote', img: 'imgs/nestify-tv.png' },
@@ -584,13 +557,13 @@ const PROJECTS = {
     title: 'Travel Blog',
     accent: '#6B4028',
     dark: true,
-    tagline: 'Wanderlust by Amritha. A handcoded travel blog built in HTML and CSS over 6 weeks, featuring image carousels, embedded social media links and a custom loading page.',
+    tagline: 'Wanderlust by Amritha',
     discover: { label: 'Visit Website', href: 'https://anilamritha.github.io/TravelBlog/', download: false },
     meta: [
-      ['Type', 'Personal project'],
-      ['Scope', 'Web design · Front-end development'],
-      ['Tools', 'HTML · CSS · JavaScript · VS Code'],
-      ['Timeline', '6 weeks · Live website']
+      ['Client', 'Personal Project'],
+      ['Scope', 'Web Design / Frontend Development'],
+      ['Tools', 'HTML / CSS / JavaScript'],
+      ['Timeline', '6 Weeks']
     ],
     sections: [
       { kind: 'two', label: '01 · Brief',
@@ -625,13 +598,13 @@ const PROJECTS = {
     title: 'NewLyf',
     accent: '#EFE6DC',
     dark: false,
-    tagline: 'Manly West Living. A responsive retirement and investment home website developed in HTML and CSS, designed for adults aged 65 and above.',
+    tagline: 'Manly West Living',
     discover: { label: 'Visit Website', href: 'https://anilamritha.github.io/newlyf/', download: false },
     meta: [
-      ['Client', 'Manly West · Real estate'],
-      ['Scope', 'Web design · Front-end development'],
-      ['Tools', 'HTML · CSS · VS Code'],
-      ['Timeline', '7 weeks · Live website']
+      ['Client', 'Real Estate Company in Manly West'],
+      ['Scope', 'Web Design / Frontend Development'],
+      ['Tools', 'HTML / CSS / JavaScript'],
+      ['Timeline', '7 Weeks']
     ],
     sections: [
       { kind: 'two', label: '01 · Brief',
@@ -659,13 +632,13 @@ const PROJECTS = {
     title: 'Winn Lane',
     accent: '#340B01',
     dark: true,
-    tagline: 'Three p5.js mini-games for the Louie Play Cabinet in Fortitude Valley, celebrating the real stores of Winn Lane. Completed in 7 weeks using p5.js and Adobe Illustrator.',
+    tagline: 'Play, Explore, Interact',
     discover: { label: 'Play the Games', href: 'https://anilamritha.github.io/WinnLane/', download: false },
     meta: [
-      ['Client', 'Arthur Apostolis · Winn Lane'],
-      ['Scope', 'Interactive design · Game dev · Illustration'],
-      ['Tools', 'p5.js · Adobe Illustrator'],
-      ['Timeline', '7 weeks · Installed in cabinet']
+      ['Client', 'Arthur Apostolis · Director of Winn Ln'],
+      ['Scope', 'Interactive Design / Game Dev'],
+      ['Tools', 'p5.js / Illustrator'],
+      ['Timeline', '7 Weeks']
     ],
     sections: [
       { kind: 'two', label: '01 · The Commission',
