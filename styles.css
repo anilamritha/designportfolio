@@ -182,7 +182,7 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 #hero{
   position: relative;
   min-height: 100vh;
-  padding: 140px 0 80px;
+  padding: 80px 0 40px;
   overflow: hidden;
 }
 .hero-stage{
@@ -190,6 +190,9 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   width: min(1280px, 96vw);
   margin-inline: auto;
   min-height: 720px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 /* Title stack center */
@@ -198,7 +201,7 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   z-index: 5;
   text-align: center;
   pointer-events: none;
-  padding: 80px 0 40px;
+  padding: 20px 0;
 }
 .hero-eyebrow{
   display: inline-flex; align-items: center; gap: 10px;
@@ -211,7 +214,7 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 .hero-title{
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(44px, 8.4vw, 138px);
+  font-size: clamp(32px, 5vw, 72px);
   line-height: .92;
   letter-spacing: -0.005em;
   margin: 0;
@@ -496,6 +499,7 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   box-shadow: var(--shadow-pop);
   z-index: 2;
   margin-top: 60px;
+  transition: transform 0.4s var(--ease-soft);
 }
 .vinyl-sleeve .pad{
   width: 100%; aspect-ratio: 1;
@@ -557,16 +561,16 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 
 /* --- Ripped paper note with doodles --- */
 .rippedpaper{
-  width: 360px;
+  width: 280px;
   position: relative;
   filter: drop-shadow(0 12px 22px rgba(52,11,1,.16));
 }
 .rippedpaper .paper{
   background: var(--c-paper);
-  padding: 28px 30px 32px;
+  padding: 24px 24px 28px;
   position: relative;
   font-family: var(--font-hand);
-  font-size: 22px;
+  font-size: 18px;
   color: var(--c-bark);
   line-height: 1.3;
   text-align: center;
@@ -661,7 +665,7 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 
 /* --- Terminal --- */
 .terminal{
-  width: 320px;
+  width: 260px;
   background: #fafaf6;
   border-radius: var(--r);
   border: 1px solid var(--c-glass-stroke);
@@ -794,17 +798,19 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   opacity: .85;
 }
 
-/* --- Position presets --- */
-/* Layout on 1280x720 stage, each sticker has verified clearance from all others */
-.s-lanyard  { top: 10px;    left: 10px; }                           /* x:10-230  y:10-310  */
-.s-stamp    { top: -5px;    left: 22%;   transform: rotate(-8deg); } /* x:~282-422 y:0-140  */
-.s-melodrama{ top: 15px;    left: 38%;   transform: rotate(4deg); }  /* x:~486-626 y:15-170 */
-.s-ticket   { top: -15px;   right: 15px; transform: rotate(6deg); }  /* x:~985-1265 y:-15-110 */
-.s-vinyl    { top: 355px;   left: 10px;  transform: rotate(-5deg); } /* x:10-210  y:355-565 */
-.s-folder   { bottom: 150px; left: 20%;  transform: rotate(-3deg); } /* x:~256-456 y:400-570 */
-.s-paper    { bottom: 0px;  left: 39%;   transform: rotate(2deg); }  /* x:~499-869 y:630-720 */
-.s-collage  { top: 150px;   right: 15px; transform: rotate(3deg); }  /* x:~985-1265 y:150-370 */
-.s-terminal { bottom: 15px; right: 15px; transform: rotate(-2deg); } /* x:~985-1265 y:490-720 */
+/* --- Position presets: surrounding the centered title ---
+   Title zone (68px Cinzel, 720px stage): x:240-1040, y:225-494
+   Stickers arranged in 3 above, 1 left, 1 right, 4 below. No sticker
+   background enters the region where title letterforms actually appear. */
+.s-melodrama { top:  40px; left:  40px;  transform: rotate(6deg); }
+.s-ticket    { top:  60px; left: 470px;  transform: rotate(-3deg); }
+.s-stamp     { top:  25px; right: 25px;  transform: rotate(-7deg); }
+.s-lanyard   { top: 220px; left: -22px;  transform: rotate(2deg); }
+.s-vinyl     { top: 188px; right: -18px; transform: rotate(-4deg); }
+.s-folder    { top: 535px; left:  10px;  transform: rotate(-5deg); }
+.s-terminal  { top: 545px; left: 260px;  transform: rotate(3deg); }
+.s-paper     { top: 535px; left: 565px;  transform: rotate(-2deg); }
+.s-collage   { top: 530px; right:  -5px; transform: rotate(4deg); }
 
 /* --- Sticker hover interactions --- */
 @keyframes pendulum{
@@ -815,8 +821,16 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 .lanyard{
   transform-origin: top center;
   animation: pendulum 2.8s ease-in-out infinite;
-  animation-delay: 1.8s; /* let the GSAP pop-in finish first */
+  animation-delay: 1.8s;
 }
+.s-lanyard:hover .lanyard{ animation-duration: 0.65s; }
+.s-lanyard:hover .badge-card{
+  box-shadow: inset 0 0 0 1px rgba(52,11,1,.25), 0 16px 36px rgba(52,11,1,.22);
+  transition: box-shadow 0.3s var(--ease-soft);
+}
+
+.s-vinyl:hover .vinyl-disc{ animation-duration: 1.2s; }
+.s-vinyl:hover .vinyl-sleeve{ transform: translateY(-10px) rotate(-2deg); }
 
 @keyframes scan-beam{
   0%  { top: 0;    opacity: 1; }
@@ -860,13 +874,18 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   pointer-events: none;
 }
 
+@media (min-width: 981px) and (max-width: 1200px){
+  .s-stamp    { display: none; }
+  .s-melodrama{ display: none; }
+}
 @media (max-width: 980px){
-  .hero-stage{ min-height: 1100px; }
-  .s-lanyard  { top: 600px; left: 20px; }
-  .s-ticket   { top: 540px; right: 10px; }
-  .s-vinyl    { top: 800px; left: 30px; }
-  .s-folder   { top: 850px; left: auto; right: 30px; bottom: auto; }
-  .s-collage  { top: 1100px; left: 50%; transform: translateX(-50%) rotate(2deg); }
+  .hero-stage{ min-height: 1100px; justify-content: flex-start; }
+  .hero-titlewrap{ padding: 60px 0 40px; }
+  .s-lanyard  { top: 480px; left: 20px; }
+  .s-ticket   { top: 420px; right: 10px; }
+  .s-vinyl    { top: 680px; left: 30px; }
+  .s-folder   { top: 720px; left: auto; right: 30px; bottom: auto; }
+  .s-collage  { top: 920px; left: 50%; transform: translateX(-50%) rotate(2deg); }
   .s-terminal { display: none; }
   .s-stamp    { display: none; }
   .s-paper    { display: none; }
@@ -1641,7 +1660,9 @@ footer .wrap{
   .project-window{ min-width: unset !important; width: 100vw !important; min-height: 100dvh !important; border-radius: 0 !important; }
 }
 @media (min-width: 1600px){
-  .hero-stage{ min-height: 860px; }
+  .hero-stage{ min-height: 820px; }
+  .s-vinyl { top: 210px; }
+  .s-collage { top: 560px; }
 }
 
 /* ============ Reveal helpers ============ */
