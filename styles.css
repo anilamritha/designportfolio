@@ -795,15 +795,16 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 }
 
 /* --- Position presets --- */
-.s-lanyard  { top: 20px;    left: 30px; }
-.s-ticket   { top: -10px;   right: 60px;  transform: rotate(6deg); }
-.s-vinyl    { top: 310px;   left: 10px;   transform: rotate(-5deg); }
-.s-folder   { bottom: 40px; left: 18%;    transform: rotate(-3deg); }
-.s-paper    { bottom: 60px; left: 42%;    transform: translateX(-50%) rotate(2deg); }
-.s-collage  { top: 260px;   right: 30px;  transform: rotate(3deg); }
-.s-terminal { bottom: 20px; right: 30px;  transform: rotate(-2deg); }
-.s-stamp    { top: 16px;    left: 6%;     transform: rotate(-8deg); }
-.s-melodrama{ bottom: 80px; left: 22%;    transform: rotate(4deg); }
+/* Layout on 1280x720 stage, each sticker has verified clearance from all others */
+.s-lanyard  { top: 10px;    left: 10px; }                           /* x:10-230  y:10-310  */
+.s-stamp    { top: -5px;    left: 22%;   transform: rotate(-8deg); } /* x:~282-422 y:0-140  */
+.s-melodrama{ top: 15px;    left: 38%;   transform: rotate(4deg); }  /* x:~486-626 y:15-170 */
+.s-ticket   { top: -15px;   right: 15px; transform: rotate(6deg); }  /* x:~985-1265 y:-15-110 */
+.s-vinyl    { top: 355px;   left: 10px;  transform: rotate(-5deg); } /* x:10-210  y:355-565 */
+.s-folder   { bottom: 150px; left: 20%;  transform: rotate(-3deg); } /* x:~256-456 y:400-570 */
+.s-paper    { bottom: 0px;  left: 39%;   transform: rotate(2deg); }  /* x:~499-869 y:630-720 */
+.s-collage  { top: 150px;   right: 15px; transform: rotate(3deg); }  /* x:~985-1265 y:150-370 */
+.s-terminal { bottom: 15px; right: 15px; transform: rotate(-2deg); } /* x:~985-1265 y:490-720 */
 
 /* --- Sticker hover interactions --- */
 @keyframes pendulum{
@@ -811,9 +812,10 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   30%     { transform: rotate(-4deg); }
   70%     { transform: rotate(4deg); }
 }
-.s-lanyard:hover .lanyard{
+.lanyard{
   transform-origin: top center;
   animation: pendulum 2.8s ease-in-out infinite;
+  animation-delay: 1.8s; /* let the GSAP pop-in finish first */
 }
 
 @keyframes scan-beam{
