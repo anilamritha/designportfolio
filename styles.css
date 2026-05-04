@@ -183,16 +183,14 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   position: relative;
   min-height: 100vh;
   padding: 80px 0 40px;
-  overflow: hidden;
 }
 .hero-stage{
   position: relative;
   width: min(1280px, 96vw);
   margin-inline: auto;
-  min-height: 720px;
+  min-height: 980px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 
 /* Title stack center */
@@ -201,7 +199,7 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   z-index: 5;
   text-align: center;
   pointer-events: none;
-  padding: 20px 0;
+  padding: max(240px, calc(50vh - 200px)) 0 40px;
 }
 .hero-eyebrow{
   display: inline-flex; align-items: center; gap: 10px;
@@ -551,13 +549,13 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   transform: translate(-50%, 0);
   z-index: 2;
   opacity: 0;
-  transition: opacity .5s var(--ease-soft), transform .55s var(--ease-pop);
+  transition: opacity .4s var(--ease-soft), transform .7s var(--ease-pop);
   filter: drop-shadow(0 8px 14px rgba(0,0,0,.25));
 }
 .mac-folder:hover .item{ opacity: 1; }
-.mac-folder:hover .item.i1{ transform: translate(-160%, -85%) rotate(-14deg); }
-.mac-folder:hover .item.i2{ transform: translate(-50%, -110%) rotate(2deg); }
-.mac-folder:hover .item.i3{ transform: translate(60%, -90%) rotate(12deg); }
+.mac-folder:hover .item.i1{ transform: translate(-310%, -260%) rotate(-22deg); }
+.mac-folder:hover .item.i2{ transform: translate(-50%, -310%) rotate(4deg); }
+.mac-folder:hover .item.i3{ transform: translate(210%, -270%) rotate(20deg); }
 
 /* --- Ripped paper note with doodles --- */
 .rippedpaper{
@@ -757,59 +755,14 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 }
 
 /* --- Melodrama CD sticker --- */
-.melodrama-wrap{ filter: drop-shadow(0 12px 24px rgba(0,0,0,.38)); }
-.cd-case{
-  width: 120px; height: 120px;
-  background: linear-gradient(145deg, #1a1535 0%, #2d2060 45%, #1a1535 100%);
-  border-radius: 4px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
-}
-.cd-spine{
-  position: absolute; left: 0; top: 0; bottom: 0;
-  width: 10px;
-  background: linear-gradient(180deg, #c8395a, #8b2240);
-}
-.cd-front{
-  position: absolute; left: 12px; right: 0; top: 0; bottom: 0;
-  display: flex; flex-direction: column;
-  justify-content: flex-end;
-  padding: 8px 8px 10px;
-}
-.cd-title{
-  font-family: var(--font-display);
-  font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
-  color: rgba(255,255,255,.85);
-  line-height: 1; margin-bottom: 2px;
-}
-.cd-artist{
-  font-family: var(--font-mono);
-  font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
-  color: rgba(255,255,255,.45);
-}
-.cd-disc-peek{
-  position: absolute; top: 10px; right: 10px;
-  width: 56px; height: 56px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at center, #1a1535 0%, #1a1535 18%, rgba(200,57,90,.55) 19%, rgba(200,57,90,.55) 22%, #1a1535 23%, #1a1535 100%);
-  box-shadow: 0 0 0 1px rgba(255,255,255,.07), 0 4px 12px rgba(0,0,0,.45);
-  opacity: .85;
-}
-
-/* --- Position presets: surrounding the centered title ---
-   Title zone (68px Cinzel, 720px stage): x:240-1040, y:225-494
-   Stickers arranged in 3 above, 1 left, 1 right, 4 below. No sticker
-   background enters the region where title letterforms actually appear. */
-.s-melodrama { top: 220px; left:  40px;  transform: rotate(6deg); }
-.s-ticket    { top:  60px; left: 470px;  transform: rotate(-3deg); }
-.s-stamp     { top:  25px; right: 25px;  transform: rotate(-7deg); }
+.s-melodrama { display: none; }
+.s-ticket    { top:  30px; left: 520px;  transform: rotate(-3deg); }
+.s-stamp     { top:  20px; right: 20px;  transform: rotate(-7deg); }
 .s-lanyard   { top:  40px; left: -22px;  transform: rotate(2deg); }
-.s-vinyl     { top: 535px; left: 565px;  transform: rotate(-2deg); }
-.s-folder    { top: 535px; left:  10px;  transform: rotate(-5deg); }
-.s-terminal  { top: 545px; left: 260px;  transform: rotate(3deg); }
-.s-paper     { top: 188px; right: -18px; transform: rotate(-4deg); }
+.s-vinyl     { top: 535px; left: 730px;  transform: rotate(-2deg); }
+.s-folder    { top: 500px; left:  60px;  transform: rotate(-5deg); }
+.s-terminal  { top: 545px; left: 370px;  transform: rotate(3deg); }
+.s-paper     { top: 320px; right: -18px; transform: rotate(-4deg); }
 .s-collage   { top: 530px; right:  -5px; transform: rotate(4deg); }
 
 /* --- Sticker hover interactions --- */
@@ -823,6 +776,7 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   animation: pendulum 2.8s ease-in-out infinite;
   animation-delay: 1.8s;
 }
+.s-folder:hover{ z-index: 10; }
 .s-lanyard:hover .lanyard{ animation-duration: 0.65s; }
 .s-lanyard:hover .badge-card{
   box-shadow: inset 0 0 0 1px rgba(52,11,1,.25), 0 16px 36px rgba(52,11,1,.22);
@@ -847,8 +801,6 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 }
 .s-ticket:hover .ticket-scan{ animation: scan-beam 2s ease-in-out infinite; }
 
-@keyframes disc-spin{ to{ transform: rotate(360deg); } }
-.s-melodrama:hover .cd-disc-peek{ animation: disc-spin 2.5s linear infinite; }
 
 @keyframes stamp-press{
   0%, 100%{ transform: scale(1)    rotate(0deg); }
@@ -876,7 +828,6 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 
 @media (min-width: 981px) and (max-width: 1200px){
   .s-stamp    { display: none; }
-  .s-melodrama{ display: none; }
 }
 @media (max-width: 980px){
   .hero-stage{ min-height: 1100px; justify-content: flex-start; }
@@ -889,7 +840,6 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   .s-terminal { display: none; }
   .s-stamp    { display: none; }
   .s-paper    { display: none; }
-  .s-melodrama{ display: none; }
 }
 @media (max-width: 540px){
   .s-collage{ display: none; }
@@ -1117,19 +1067,19 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 .folder-back svg, .folder-front svg{ width: 100%; height: 100%; }
 .folder-front{
   transform-origin: bottom center;
-  transition: transform .55s var(--ease-soft), opacity .4s var(--ease-soft);
   z-index: 3;
+  transition: transform .55s var(--ease-soft), opacity .45s var(--ease-soft);
 }
-.folder-tile:hover .folder-front{ transform: rotateX(-22deg); opacity: 0.22; }
+.folder-tile:hover .folder-front{
+  transform: rotateX(-28deg);
+  opacity: 0.28;
+}
 .folder-thing{
-  z-index: 4;
+  z-index: 2;
   display: flex; align-items: center; justify-content: center;
-  opacity: 0;
-  transform: translateY(12px) scale(0.65);
-  transform-origin: bottom center;
-  transition: opacity .3s, transform .55s cubic-bezier(.34, 1.56, .64, 1);
+  opacity: 1;
+  transform: translateY(8%) scale(0.72);
 }
-.folder-tile:hover .folder-thing{ opacity: 1; transform: translateY(-55%) scale(1.08); }
 .folder-thing svg{ width: 72%; }
 
 .folder-meta{
@@ -1485,6 +1435,7 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 
 /* ============ About ============ */
 #about{
+  position: relative;
   padding: 140px 0 120px;
 }
 .about-grid{
@@ -1641,26 +1592,16 @@ footer .wrap{
 .about-statement .about-headline{ margin: 0 0 20px; }
 .about-statement .about-body{ font-size: 16px; line-height: 1.78; }
 .about-statement .about-body p{ margin: 0 0 1em; }
-.about-skills-row{
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 60px;
-  margin-top: 60px;
-  align-items: start;
-}
-.about-skills-filler{ font-size: 17px; line-height: 1.75; }
-.about-skills-filler p + p{ margin-top: 1em; }
 @media (max-width: 860px){
   .about-photo-row{ grid-template-columns: 1fr; }
   .about-photo-wrap{ position: static; }
   .about-photo{ max-width: 340px; margin-inline: auto; }
-  .about-skills-row{ grid-template-columns: 1fr; gap: 40px; }
 }
 @media (max-width: 760px){
   .project-window{ min-width: unset !important; width: 100vw !important; min-height: 100dvh !important; border-radius: 0 !important; }
 }
 @media (min-width: 1600px){
-  .hero-stage{ min-height: 820px; }
+  .hero-stage{ min-height: 1020px; }
   .s-paper  { top: 210px; }
   .s-collage { top: 560px; }
 }
