@@ -321,47 +321,69 @@ function runIntro(){
 }
 
 
-/* ---------- bulletin board: static pins + wind ---------- */
+/* ---------- bulletin board: velocity-based wind effect ---------- */
 (() => {
   const cork = document.getElementById('boardCork');
   if (!cork) return;
   const pins = [...cork.querySelectorAll('.pin-item')];
+  const n = pins.length;
 
-  // CSS left/top % handles position; GSAP owns rotation from data-rot
-  pins.forEach(el => {
-    const rot = parseFloat(el.dataset.rot ?? 0);
-    gsap.set(el, { rotation: rot });
+  const baseRot    = new Float64Array(n);
+  const weight     = new Float64Array(n);
+  const phase      = new Float64Array(n);
+  const tiltDir    = new Float64Array(n);
+  const flutterMag = new Float64Array(n);
+  const flutterAmt = new Float64Array(n);
+
+  pins.forEach((el, i) => {
+    baseRot[i]  = parseFloat(el.dataset.rot ?? 0);
+    weight[i]   = 0.65 + Math.random() * 0.7;
+    phase[i]    = Math.random() * Math.PI * 2;
+    tiltDir[i]  = Math.random() < 0.5 ? -1 : 1;
+    gsap.set(el, { rotation: baseRot[i], transformOrigin: '50% 0%' });
   });
 
-  // Hover wind burst when cursor enters the board
-  cork.addEventListener('mouseenter', () => {
-    pins.forEach((el, i) => {
-      const base    = parseFloat(el.dataset.rot ?? 0);
-      const flutter = (Math.random() - 0.5) * 12;
-      gsap.to(el, {
-        rotation: base + flutter,
-        duration: 0.3 + Math.random() * 0.25,
-        ease: 'power2.out',
-        onComplete() {
-          gsap.to(el, { rotation: base, duration: 1.1, ease: 'elastic.out(1, 0.45)', delay: i * 0.025 });
-        }
-      });
-    });
-  });
+  const setRot = pins.map(el => gsap.quickSetter(el, 'rotation', 'deg'));
 
-  // Scroll-speed flutter
-  let lastY = window.scrollY;
+  let lastY = window.scrollY, lastT = performance.now();
+  let velTarget = 0, velSmooth = 0;
+
   window.addEventListener('scroll', () => {
-    const delta = window.scrollY - lastY;
+    const now = performance.now();
+    const dt  = Math.max(now - lastT, 1);
+    velTarget = Math.max(-3.5, Math.min(3.5, (window.scrollY - lastY) / dt));
     lastY = window.scrollY;
-    if (Math.abs(delta) < 5) return;
-    pins.forEach((el, i) => {
-      const base = parseFloat(el.dataset.rot ?? 0);
-      const kick = delta * 0.07 * (i % 2 === 0 ? 1 : -1);
-      gsap.to(el, { rotation: base + kick, duration: 0.12, ease: 'none', overwrite: 'auto' });
-      gsap.to(el, { rotation: base, duration: 1.4, ease: 'elastic.out(1, 0.35)', delay: 0.12, overwrite: false });
-    });
+    lastT = now;
   }, { passive: true });
+
+  cork.addEventListener('mouseenter', () => {
+    for (let i = 0; i < n; i++) {
+      flutterMag[i] = (Math.random() - 0.5) * 16;
+      flutterAmt[i] = 1;
+    }
+  });
+
+  function tick() {
+    velSmooth += (velTarget - velSmooth) * 0.18;
+    velTarget  *= 0.88;
+    if (Math.abs(velTarget) < 0.005) velTarget = 0;
+
+    const t = performance.now() * 0.001;
+
+    for (let i = 0; i < n; i++) {
+      const ambient = Math.sin(t * 0.9 + phase[i]) * 0.8;
+      const wind    = velSmooth * 9 * weight[i] * tiltDir[i] * (0.7 + 0.3 * Math.sin(phase[i]));
+
+      if (flutterAmt[i] > 0.01) flutterAmt[i] *= 0.94;
+      else flutterAmt[i] = 0;
+      const hover = flutterMag[i] * flutterAmt[i];
+
+      setRot[i](baseRot[i] + wind + ambient + hover);
+    }
+
+    requestAnimationFrame(tick);
+  }
+  tick();
 })();
 
 

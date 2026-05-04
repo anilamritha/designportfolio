@@ -631,7 +631,7 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 }
 .polaroid:hover{
   transform: rotate(0deg) translateY(-6px) scale(1.05) !important;
-  z-index: 5;
+  z-index: 5 !important;
   box-shadow: 0 4px 12px rgba(52,11,1,.10), 0 30px 60px -10px rgba(52,11,1,.30);
 }
 .polaroid .pic{
@@ -802,14 +802,14 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
    Title zone (68px Cinzel, 720px stage): x:240-1040, y:225-494
    Stickers arranged in 3 above, 1 left, 1 right, 4 below. No sticker
    background enters the region where title letterforms actually appear. */
-.s-melodrama { top:  40px; left:  40px;  transform: rotate(6deg); }
+.s-melodrama { top: 220px; left:  40px;  transform: rotate(6deg); }
 .s-ticket    { top:  60px; left: 470px;  transform: rotate(-3deg); }
 .s-stamp     { top:  25px; right: 25px;  transform: rotate(-7deg); }
-.s-lanyard   { top: 220px; left: -22px;  transform: rotate(2deg); }
-.s-vinyl     { top: 188px; right: -18px; transform: rotate(-4deg); }
+.s-lanyard   { top:  40px; left: -22px;  transform: rotate(2deg); }
+.s-vinyl     { top: 535px; left: 565px;  transform: rotate(-2deg); }
 .s-folder    { top: 535px; left:  10px;  transform: rotate(-5deg); }
 .s-terminal  { top: 545px; left: 260px;  transform: rotate(3deg); }
-.s-paper     { top: 535px; left: 565px;  transform: rotate(-2deg); }
+.s-paper     { top: 188px; right: -18px; transform: rotate(-4deg); }
 .s-collage   { top: 530px; right:  -5px; transform: rotate(4deg); }
 
 /* --- Sticker hover interactions --- */
@@ -1102,7 +1102,7 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   cursor: none;
   transition: transform .35s var(--ease-pop);
 }
-.folder-tile:hover{ transform: translateY(-8px) scale(1.01); }
+.folder-tile:hover{ transform: translateY(-6px) scale(0.92); }
 
 .folder-icon{
   position: relative;
@@ -1117,20 +1117,19 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 .folder-back svg, .folder-front svg{ width: 100%; height: 100%; }
 .folder-front{
   transform-origin: bottom center;
-  transition: transform .55s var(--ease-soft);
+  transition: transform .55s var(--ease-soft), opacity .4s var(--ease-soft);
   z-index: 3;
 }
-.folder-tile:hover .folder-front{ transform: rotateX(-22deg); }
+.folder-tile:hover .folder-front{ transform: rotateX(-22deg); opacity: 0.22; }
 .folder-thing{
-  z-index: 2;
-  display: grid; place-items: end center;
-  padding-bottom: 28%;
+  z-index: 4;
+  display: flex; align-items: center; justify-content: center;
   opacity: 0;
-  transform: translateY(30px) scale(0.65);
+  transform: translateY(12px) scale(0.65);
   transform-origin: bottom center;
-  transition: opacity .25s, transform .55s cubic-bezier(.34, 1.56, .64, 1);
+  transition: opacity .3s, transform .55s cubic-bezier(.34, 1.56, .64, 1);
 }
-.folder-tile:hover .folder-thing{ opacity: 1; transform: translateY(-68%) scale(1.12); }
+.folder-tile:hover .folder-thing{ opacity: 1; transform: translateY(-55%) scale(1.08); }
 .folder-thing svg{ width: 72%; }
 
 .folder-meta{
@@ -1423,6 +1422,7 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   filter: drop-shadow(0 14px 22px rgba(52,11,1,.16));
   user-select: none;
   -webkit-user-select: none;
+  transform-origin: 50% 0%;
 }
 .pin-item .pin{
   position: absolute; left: 50%; top: -8px;
@@ -1661,7 +1661,7 @@ footer .wrap{
 }
 @media (min-width: 1600px){
   .hero-stage{ min-height: 820px; }
-  .s-vinyl { top: 210px; }
+  .s-paper  { top: 210px; }
   .s-collage { top: 560px; }
 }
 
