@@ -120,6 +120,8 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 
 /* ============ Layout ============ */
 .wrap{ width: min(1320px, 92vw); margin-inline: auto; }
+#about .wrap,
+#intro .wrap{ max-width: min(1120px, 92vw); }
 
 /* ============ Menubar ============ */
 .menubar{
@@ -877,7 +879,7 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 }
 .intro-grid{
   display: grid;
-  grid-template-columns: 1fr 1.3fr;
+  grid-template-columns: 1.3fr 1fr;
   gap: 80px;
   align-items: start;
 }
@@ -885,6 +887,8 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   font-family: var(--font-mono);
   font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
   color: var(--c-bark);
+  margin-bottom: 20px;
+  display: block;
 }
 .intro-left{
   display: flex;
@@ -894,7 +898,6 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 }
 .intro-portrait{
   width: 100%;
-  max-width: 380px;
   border-radius: var(--r-lg);
   box-shadow: var(--shadow-pop);
   object-fit: cover;
@@ -903,7 +906,7 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   display: block;
 }
 @media (max-width: 880px){
-  .intro-portrait{ max-width: 260px; aspect-ratio: 4/5; }
+  .intro-portrait{ aspect-ratio: 4/5; }
 }
 @media (max-width: 540px){
   .intro-portrait{ max-width: 100%; aspect-ratio: 3/2; object-position: center 20%; }
@@ -921,7 +924,6 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   font-size: 17px;
   line-height: 1.75;
   color: var(--c-ink);
-  max-width: 56ch;
 }
 .intro-body p + p{ margin-top: 1.1em; }
 .tag-row{
@@ -1450,7 +1452,7 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
   margin: 12px 0 24px;
 }
 .about-headline em{ font-style: italic; color: var(--c-bark); }
-.about-body{ font-size: 17px; line-height: 1.75; max-width: 60ch; }
+.about-body{ font-size: 17px; line-height: 1.75; }
 .about-body p + p{ margin-top: 1em; }
 .about-card{
   background: rgba(246,244,243,.75);
@@ -1477,16 +1479,18 @@ body.is-drag  .cursor-ring{ width: 70px; height: 70px; }
 
 /* ============ Contact ============ */
 #contact{
-  padding: 100px 0 120px;
+  padding: 100px 0 160px;
   position: relative;
+  isolation: isolate;
 }
 .contact-card{
   background: var(--c-ink);
   color: var(--c-cream);
   border-radius: var(--r-lg);
-  padding: 80px 60px;
+  padding: 80px 60px 100px;
   position: relative;
   overflow: hidden;
+  isolation: isolate;
   box-shadow: var(--shadow-window);
 }
 .contact-card::after{
@@ -1572,8 +1576,8 @@ footer .wrap{
 /* ============ About photo layout ============ */
 .about-photo-row{
   display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 60px;
+  grid-template-columns: 340px 1fr;
+  gap: 64px;
   align-items: start;
   margin-top: 24px;
 }
